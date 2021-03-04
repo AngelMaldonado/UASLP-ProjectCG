@@ -231,25 +231,26 @@ public:
             cin >> userResponse;
             userResponse = toupper(userResponse);
         }while(userResponse != 'N' && userResponse != 'Y');
-
-        // Print the meshes
-        for (int mesh = 0; mesh < meshes.size(); mesh++) {
-            cout << "o " << meshes[mesh].getMeshName() << '\n';
-            // Print the vertices of mesh
-            for(Vertex vertex : meshes[mesh].getVertices()) {
-                cout << "v ";
-                vertex.showCoordinates();
-            }
-            // Print the faces of mesh
-            for(Face face : meshes[mesh].getFaces()) {
-                cout << "f ";
-                face.showFace();
-            }
-        }
+	if(userResponse == 'Y') {
+		// Print the meshes
+		for (int mesh = 0; mesh < meshes.size(); mesh++) {
+		    cout << "o " << meshes[mesh].getMeshName() << '\n';
+		    // Print the vertices of mesh
+		    for(Vertex vertex : meshes[mesh].getVertices()) {
+		        cout << "v ";
+		        vertex.showCoordinates();
+		    }
+		    // Print the faces of mesh
+		    for(Face face : meshes[mesh].getFaces()) {
+		        cout << "f ";
+		        face.showFace();
+		    }
+		}
+	}
     }
 
     bool validateFile(string fileName) {
-
+	return false;
     }
 
     void closeFile() {
