@@ -32,5 +32,9 @@ public:
         this->y = y;
         this->z = z;
     }
+
+    void showCoordinates() {
+        cout << fixed << '(' << x << ", " << y << ", " << z << ')' << "\n";
+    }
 };
 
