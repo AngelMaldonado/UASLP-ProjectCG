@@ -10,9 +10,11 @@
 int main(int argc, char* argv[]) {
     OBJFileReader fileReader;
     vector <Mesh> meshes;
-    string fileName = argv[0];
+    string fileName;
 
-    fileReader.readFile("models/cube.obj", meshes);
+    cin >> fileName;
+
+    fileReader.readFile(fileName, meshes);
     return 0;
 }
 
