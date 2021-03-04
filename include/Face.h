@@ -25,5 +25,18 @@ public:
     Face(vector <Vertex> vertices) {
         this->vertices = vertices;
     }
+
+    void showFaceFormatted() {
+        cout << "Face composed of: \n";
+        for(Vertex vertex : vertices)
+            vertex.showCoordinatesFormatted();
+        cout << '\n';
+    }
+
+    void showFace() {
+        for(Vertex vertex : vertices) {
+            cout << vertex.getIndex() << ' ';
+        } cout << '\n';
+    }
 };
 

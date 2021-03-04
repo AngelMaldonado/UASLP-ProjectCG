@@ -17,8 +17,8 @@
 
 class Vertex {
 private:
-    // Id to identify the vertex
-    int id;
+    // Index to identify the vertex
+    int index;
     // Coordinate in x.
     double x;
     // Coordinate in y.
@@ -31,10 +31,27 @@ public:
         this->x = x;
         this->y = y;
         this->z = z;
+        index = -1;
+    }
+
+    // Constructor for Vertex with user-defined coordinates and index/id
+    Vertex(double x, double y, double z, int index) {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+        this->index = index;
+    }
+
+    void showCoordinatesFormatted() {
+        cout << fixed << index << " (" << x << ", " << y << ", " << z << ')' << "\n";
     }
 
     void showCoordinates() {
-        cout << fixed << '(' << x << ", " << y << ", " << z << ')' << "\n";
+        cout << fixed << x << ' ' << y << ' ' << z << '\n';
+    }
+
+    int getIndex() {
+        return index;
     }
 };
 
