@@ -1,6 +1,7 @@
 #include "../../include/objreader.h"
 
-bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
+vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
+    vector<Mesh> meshes;
     // Checks the extension of the file
     if (fileName.substr(fileName.find_last_of(".") + 1) == "obj") {
 
@@ -19,11 +20,14 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
             // Variable that stores the index of the las Vertex that was added to a mesh
             int lastVertexIndex;
 
-            // Show in console that file was successfully opened
-            cout << "**********************************************" << '\n';
-            cout << "******** Successfully opened the file ********" << '\n';
-            cout << "**********************************************" << "\n\n";
-
+            if(printReading == 's')
+            {
+                // Show in console that file was successfully opened
+                cout << "**********************************************" << '\n';
+                cout << "******** Successfully opened the file ********" << '\n';
+                cout << "**********************************************" << "\n\n";
+            }
+            
             // Store the file's name in fileName attribute
             this->fileName = fileName;
 
@@ -31,7 +35,7 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
             while (getline(fileReader, lineContent)) {
 
                 // If the first position of the content on the line read is a comment ('#')
-                if (lineContent[0] == '#')
+                if (lineContent[0] == '#' && printReading == 's')
                     cout << "<<Found a comment (#)>>" << "\n\n" << lineContent << "\n\n";
                 else
 
@@ -40,9 +44,12 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
 
                         // Object case
                         case 'o':
-                            cout << "*********************************" << '\n';
-                            cout << "****** Found an object (o) ******" << '\n';
-                            cout << "*********************************" << "\n\n";
+                            if(printReading == 's')
+                            {
+                                cout << "*********************************" << '\n';
+                                cout << "****** Found an object (o) ******" << '\n';
+                                cout << "*********************************" << "\n\n";
+                            }
 
                             // If there is more than one mesh in file, continue the vertexIndex with last value set
                             if(meshes.size() > 0) {
@@ -56,27 +63,37 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
                             }
 
                             // Print the name from the new Mesh at Mesh vector
-                            cout << ">> Object identifier: " << meshes.back().getMeshName() << '\n';
-                            cout << " --- Successfully stored in vector<Mesh> ---" << "\n\n";
+                            if(printReading == 's')
+                            {
+                                cout << ">> Object identifier: " << meshes.back().getMeshName() << '\n';
+                                cout << " --- Successfully stored in vector<Mesh> ---" << "\n\n";
+                            }
                             break;
 
                             // Vertex case
                         case 'v':
                             // Reset the dblVerticesRead
                             dblVerticesRead.clear();
-                            cout << "*********************************" << '\n';
-                            cout << "******* Found a vertex (v) ******" << '\n';
-                            cout << "*********************************" << "\n\n";
+
+                            if(printReading == 's')
+                            {
+                                cout << "*********************************" << '\n';
+                                cout << "******* Found a vertex (v) ******" << '\n';
+                                cout << "*********************************" << "\n\n";
+                            }
 
                             // Get and push a new Vertex to the verticesRead vector
                             dblVerticesRead = getVertexCoordinatesWithLine(lineContent);
 
                             // Add the Vertex read to the current mesh
                             if(meshes.back().addVertex(dblVerticesRead)) {
-                                cout << "Vertex: ";
-                                meshes.back().getLastVertex().showCoordinatesFormatted();
-                                cout << "--- Successfully stored in mesh " << meshes.back().getMeshName();
-                                cout << "---" << "\n\n";
+                                if (printReading == 's')
+                                {
+                                    cout << "Vertex: ";
+                                    meshes.back().getLastVertex().showCoordinatesFormatted();
+                                    cout << "--- Successfully stored in mesh " << meshes.back().getMeshName();
+                                    cout << "---" << "\n\n";
+                                }
                             } else cout << "~~~ Invalid vertex ~~~" << "\n\n";
                             break;
 
@@ -84,17 +101,23 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
                         case 'f':
                             // Reset the faceVertices vector
                             faceVertices.clear();
-                            cout << "*********************************" << '\n';
-                            cout << "******** Found a face (f) *******" << '\n';
-                            cout << "*********************************" << "\n\n";
+                            if(printReading == 's')
+                            {
+                                cout << "*********************************" << '\n';
+                                cout << "******** Found a face (f) *******" << '\n';
+                                cout << "*********************************" << "\n\n";
+                            }
 
                             // Get a vector of Vertex that describes the face that is reading
                             faceVertices = getFaceWithLine(lineContent, meshes.back(), lastVertexIndex);
                             // Create a new face in current mesh with vector faceVertices
                             if(meshes.back().addFace(faceVertices)) {
-                                meshes.back().getLastFace().showsFaceFormatted();
-                                cout << "--- Successfully stored in mesh " << meshes.back().getMeshName();
-                                cout << "---" << "\n\n";
+                                if(printReading == 's')
+                                {
+                                    meshes.back().getLastFace().showsFaceFormatted();
+                                    cout << "--- Successfully stored in mesh " << meshes.back().getMeshName();
+                                    cout << "---" << "\n\n";
+                                }
                             }
                             else
                                 cout << "~~~ Insufficient vertices to make a face! ~~~" << "\n\n";
@@ -102,10 +125,11 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
                     }
             }
             // Ask to print info stored in vector<Mesh> as the original file
-            printInfoAsFile(meshes);
+            if(printReading == 's')
+                printInfoAsFile(meshes);
 
             // Return true when the reading finished
-            return true;
+            return meshes;
         }
     } else
     cout << "******** Invalid file extension ********" << '\n';
@@ -114,7 +138,7 @@ bool OBJFileReader::readFile(string fileName, vector <Mesh> meshes) {
     // Show message in console
     cout << "******** Failed to read the file ********" << '\n';
     // Return false
-    return false;
+    return {};
 }
 
 vector<Vertex> OBJFileReader::getFaceWithLine(string currentFileLine, Mesh currentMesh, int lastVrtxIndexInPrevMesh) {

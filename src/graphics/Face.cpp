@@ -24,3 +24,7 @@ void Face::showFace() {
             cout << vertex.getIndex() << ' ';
         } cout << '\n';
 }
+
+vector<Vertex> Face::getVertices() {
+    return vertices;
+}
