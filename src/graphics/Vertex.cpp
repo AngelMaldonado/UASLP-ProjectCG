@@ -41,3 +41,9 @@ double Vertex::getY() {
 double Vertex::getZ() {
     return y;
 }
+
+double * Vertex::getCoordinates() {
+    double* coordinates = new double[3];
+    coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;
+    return coordinates;
+}

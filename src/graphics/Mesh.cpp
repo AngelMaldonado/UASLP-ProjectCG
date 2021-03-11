@@ -18,7 +18,7 @@ bool Mesh::addVertex(vector<double> coordinates) {
         vertices.push_back(Vertex(coordinates[0],       // x
                                     coordinates[1],     // y
                                     coordinates[2],     // z
-                                    ++vertexIndex));
+                                    vertexIndex++));
         return true;
     }
     return false;
@@ -35,7 +35,11 @@ bool Mesh::addFace(vector<Vertex> vertices) {
     }
 }
 
-list<Face> Mesh::getFaces() {
+Face Mesh::getFace(int index) {
+    return faces.at(index);
+}
+
+vector<Face> Mesh::getFaces() {
     return faces;
 }
 

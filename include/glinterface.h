@@ -5,6 +5,8 @@ class GLInterface {
     private:
 
     public:
+        // Empty GLInterface constructor
+        GLInterface();
         // Function to initialize an OpenGL window
         void initGLWindow(int argc, char** argv, int width, int height, int posX, int posY);
 
