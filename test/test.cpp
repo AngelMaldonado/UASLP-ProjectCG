@@ -1,11 +1,7 @@
 //
 // Created by Angel Maldonado on 3/4/2021.
 //
-
-//
-// Created by Angel Maldonado on 3/4/2021.
-//
-#include "../include/OBJFileReader.h"
+#include "../include/objreader.h"
 
 int main(int argc, char* argv[]) {
     OBJFileReader fileReader;
