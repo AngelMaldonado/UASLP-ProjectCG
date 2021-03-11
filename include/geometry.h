@@ -4,9 +4,9 @@
 using namespace std;
 
 #endif
+#pragma once
 #include <iostream>
 #include "containers.h"
-#pragma once
 
 /**
  * >> Vertex: is a point where two or more curves, lines, or edges meet.
@@ -40,6 +40,15 @@ public:
 
     // Gets the number of vertex (minimum index is 0)
     int getIndex();
+
+    // Returns the x coorinate
+    double getX();
+
+    // Returns the y coordinate
+    double getY();
+
+    //Returns the z coordinate
+    double getZ();
 };
 
 /**
@@ -61,6 +70,9 @@ public:
 
     // Shows the Vertices that the Faces are made of
     void showFace();
+
+    // Returns the vector of Vertices
+    vector <Vertex> getVertices();
 };
 
 

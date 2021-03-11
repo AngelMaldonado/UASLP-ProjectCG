@@ -4,12 +4,12 @@
 using namespace std;
 
 #endif
+#pragma once
 #include <iostream>
 #include <fstream> // Library to work with files
 #include <sstream>
 #include <ctype.h>
 #include "geometry.h"
-#pragma once
 
 /**
  * OBJFileReader class: this class allows the user to read a *.obj file and store the information from that file
@@ -32,7 +32,7 @@ private:
     string filePath;
 public:
     // Method to read de obj file and store info in a vector of meshes
-    bool readFile(string fileName, vector <Mesh> meshes);
+    vector<Mesh> readFile(string fileName, char printReading);
 
     // Returns a vector of Vertex objects that describe a Face in current line at reading process
     // Requires the current mesh which contains the continuity of vertices' indexes that were added

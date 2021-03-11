@@ -28,3 +28,16 @@ int Vertex::getIndex() {
     return index;
 }
 
+double Vertex::getX() {
+    return x;
+}
+
+
+double Vertex::getY() {
+    return y;
+}
+
+
+double Vertex::getZ() {
+    return y;
+}
