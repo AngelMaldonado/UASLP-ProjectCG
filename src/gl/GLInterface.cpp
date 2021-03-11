@@ -1,5 +1,7 @@
 #include "../../include/glinterface.h"
 
+GLInterface::GLInterface() {}
+
 void GLInterface::initGLWindow(int argc, char** argv, int width, int height, int posX, int posY) {
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
@@ -13,7 +15,7 @@ void GLInterface::initView(void) {
     glClearColor (0.0, 0.0, 0.0, 0.0);
 
     // Initialize viewing values
-    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(-3.0, 3.0, -3.0, 3.0, -3.0, 3.0);
 

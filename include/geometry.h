@@ -49,6 +49,9 @@ public:
 
     //Returns the z coordinate
     double getZ();
+
+    // Returns an array with the coordinates
+    double * getCoordinates();
 };
 
 /**
@@ -87,7 +90,7 @@ public:
 class Mesh {
 private:
     string name;
-    list <Face> faces;
+    vector <Face> faces;
     int vertexIndex;
     vector <Vertex> vertices;
 
@@ -104,8 +107,10 @@ public:
     // Add a new Face to the Mesh passing a vector with its vertices
     bool addFace(vector <Vertex> vertices);
 
+    Face getFace(int index);
+
     // Returns the list of Faces that compose the Mesh
-    list<Face> getFaces();
+    vector<Face> getFaces();
 
     // Returns the last Face added to the Mesh
     Face getLastFace();
