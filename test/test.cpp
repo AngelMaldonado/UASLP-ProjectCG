@@ -38,28 +38,18 @@ void displayMesh() {
     glFlush ();
 }
 
-void initView(void) {
-    // Select clearing (background) color
-    glClearColor (0.0, 0.0, 0.0, 0.0);
-
-    // Initialize viewing values
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-3.0, 3.0, -3.0, 3.0, -3.0, 3.0);
-
-    // Rotate the whole scene so that three faces of the cube are seen
-    glRotatef (30.0, 1.0, 1.0, 1.0);
-}
-
 int main(int argc, char* argv[]) {
+    // Given
     OBJFileReader fileReader;
     GLInterface glInterface = GLInterface();
-
     meshes = fileReader.readFile("models/monkey.obj", 'n');
     
+    // When
     glInterface.initGLWindow(argc, argv, 300, 300, 100, 100);
     glInterface.initView();
     glInterface.setDisplayFunction(displayMesh);
+
+    // Then
     glInterface.startGLloop();
 
     return 0;
