@@ -4,6 +4,11 @@
 #include "../include/objreader.h"
 #include "../include/glinterface.h"
 
+int main(int argc, char* argv[]) {
+
+    return 0;
+}
+
 vector<Mesh> meshes;
 
 void displayMesh() {
@@ -38,7 +43,7 @@ void displayMesh() {
     glFlush ();
 }
 
-int main(int argc, char* argv[]) {
+void givenModel_whenCertainViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {
     // Given
     OBJFileReader fileReader;
     GLInterface glInterface = GLInterface();
@@ -51,7 +56,5 @@ int main(int argc, char* argv[]) {
 
     // Then
     glInterface.startGLloop();
-
-    return 0;
 }
 
