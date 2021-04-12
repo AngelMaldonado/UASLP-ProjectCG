@@ -26,7 +26,7 @@ VERTEX_CPP = $(SRC_DIR)graphics/Vertex.cpp
 TST_TRAJ = test/trajectories/TrajectoriesTest.cpp
 
 # Linkers
-C_WIN_INCLUDES = -lOpenGL32 -lfreeGLUT
+CINCLUDES = -lGL -lGLU -lglut
 
 # Make main project
 all:
@@ -34,16 +34,21 @@ all:
 	clean
 
 # Make trajectories Test
-traj_tests:${OUT_DIR} bindir TrajectoriesTest.o GLInterface.o
-	$(CC) $(OUT_TST)*.o $(OUT_DIR)GLInterface.o -o $(BIN_TST)traj_tests.exe
+traj_tests:${OUT_DIR} ${BIN_DIR} GLInterface.o TrajectoryHandler.o TrajectoriesTest.o
+	$(CC) $(OUT_TST)TrajectoriesTest.o -o $(BIN_TST)traj_tests $(CINCLUDES)
 
-TrajectoriesTest.o: $(TST_TRAJ)
-	$(CC) $(CFLAGS) $(TST_TRAJ) -o $(OUT_TST)TrajectoriesTest.o
+TrajectoriesTest.o:
+	$(CC) $(TST_TRAJ) $(TRAJ_HANLDER_CPP) -o $(OUT_TST)TrajectoriesTest.o
+
+TrajectoryHandler.o: $(TRAJ_HANLDER_CPP)
+	$(CC) $(CFLAGS) $(TRAJ_HANLDER_CPP) -o $(OUT_TST)TrajectoryHandler.o
 
 GLInterface.o: $(GL_INTERFACE_CPP)
 	$(CC) $(CFLAGS) $(GL_INTERFACE_CPP) -o $(OUT_DIR)GLInterface.o
 
 ${OUT_DIR}:
 		mkdir -p ${OUT_DIR}
-bindir:
-		mkdir "bin/tests"
+		mkdir -p ${OUT_TST}
+${BIN_DIR}:
+		mkdir -p ${BIN_DIR}
+		mkdir -p ${BIN_TST}
