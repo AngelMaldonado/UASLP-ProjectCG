@@ -1,13 +1,44 @@
 #include "../../include/glinterface.h"
 
-GLInterface::GLInterface() {}
+GLInterface::GLInterface() {
+    wndWith = 800;
+    wndHeight = 800;
+    wndPosX = 50;
+    wndPosY = 50;
+    wndName = (char*)"Glut App";
+}
 
-void GLInterface::initGLWindow(int argc, char** argv, int width, int height, int posX, int posY) {
+GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, char* wndName) {
+    this->wndWith = wndWith;
+    this->wndHeight = wndHeight;
+    this->wndPosX = wndPosX;
+    this->wndPosY = wndPosY;
+    this->wndName = wndName;
+}
+
+void GLInterface::displayWrapper() {
+    instance->display();
+}
+
+void GLInterface::runWrapper() {
+    instance->run();
+}
+
+void GLInterface::startFramework(int argc, char *argv[]) {
+    // Initialize GLUT
     glutInit(&argc, argv);
-    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize (width, height); 
-    glutInitWindowPosition (posX, posY);
-    glutCreateWindow (":: M E S H ::");
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowPosition(wndPosX, wndPosY);
+    glutInitWindowSize(wndWith, wndHeight);
+    glutCreateWindow(wndName);
+    initView();
+
+    // Function callbacks
+    glutDisplayFunc(displayWrapper);
+
+    // Start the main GLUT loop/thread
+    //glutIdleFunc(runWrapper);
+    glutMainLoop();
 }
 
 void GLInterface::initView(void) {
@@ -23,31 +54,13 @@ void GLInterface::initView(void) {
     glRotatef (30.0, 1.0, 1.0, 1.0);
 }
 
-void GLInterface::setDisplayFunction(void (*callback)()) {
-    glutDisplayFunc(callback);
+void GLInterface::setInstance(GLInterface* framework) {
+    instance = framework;
 }
 
-void GLInterface::startGLloop() {
-    glutMainLoop();
-}
+void GLInterface::display() {}
 
-/*
-void GLInterface::displayMesh() {
-    // Clear all pixels
-    glClear (GL_COLOR_BUFFER_BIT);
+void GLInterface::run() {}
 
-    // Define color
-    glColor3f (1.0, 1.0, 1.0);
-
-    for (Face face : mesh.getFaces()) 
-    {
-        glBegin(GL_LINE_LOOP);
-        for (Vertex vertex : face.getVertices())
-        {
-            glVertex3f(vertex.getX(), vertex.getY(), vertex.getZ());
-        }
-        glEnd();
-    }
-    // Start processing buffered OpenGL routines 
-    glFlush ();
-}*/
+// Initialize the instance of GLInterface to a null reference
+GLInterface* GLInterface::instance = NULL;
