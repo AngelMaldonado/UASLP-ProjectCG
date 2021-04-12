@@ -1,7 +1,20 @@
 #include "../../include/trajectories.h"
 
-TrajectoryHandler::TrajectoryHandler() {}
+TrajectoryHandler::TrajectoryHandler() {
+    fx1 = fy1 = fx2 = fy2 = -1;
+    ix1 = iy1 = ix2 = iy2 = -1;
+    r = g = b = -1;
+    alg = GEO_DRAW_LINE;
+}
 
+
+void TrajectoryHandler::display() {
+    switch(alg)
+    {
+        case GEO_DRAW_LINE:
+            geoDrawLine(fx1, fy1, fx2, fy2, r, g, b);
+    }
+}
 void TrajectoryHandler::geoDrawLine(float x1, float y1, float x2, float y2, int red, int green, int blue) {
     // m -> slope, b-> point that intersects with y axis, x and y -> coordinates to draw
     float m, b, x, y;
