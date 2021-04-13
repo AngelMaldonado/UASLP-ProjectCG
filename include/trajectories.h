@@ -20,7 +20,7 @@ class TrajectoryHandler : public GLInterface{
         int ix1, iy1, ix2, iy2;
 
         // RGB line/curve values
-        int r, g, b;
+        int red, green, blue;
 
         // Selected algorithm/method
         int alg;
@@ -35,7 +35,7 @@ class TrajectoryHandler : public GLInterface{
         virtual void display();
 
         // Draw a line with the geometric method
-        static void geoDrawLine(float x1, float y1, float x2, float y2, int r, int g, int b);
+        void geoDrawLine();
 
         // Draw a line following the DDA algorithm
         void ddaDrawLine(int x1, int y1, int x2, int y2);

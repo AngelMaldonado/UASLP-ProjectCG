@@ -34,14 +34,16 @@ all:
 	clean
 
 # Make trajectories Test
+# STILL NEEDS TO LINK TO THE TrajectoriesTest.o WHEN COMPILING
 traj_tests:${OUT_DIR} ${BIN_DIR} GLInterface.o TrajectoryHandler.o TrajectoriesTest.o
-	$(CC) $(OUT_TST)TrajectoriesTest.o -o $(BIN_TST)traj_tests $(CINCLUDES)
+	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)TrajectoryHandler.o $(OUT_TST)TrajectoriesTest.o -o $(BIN_TST)traj_tests $(CINCLUDES)
+	./bin/tests/traj_tests
 
-TrajectoriesTest.o:
-	$(CC) $(TST_TRAJ) $(TRAJ_HANLDER_CPP) -o $(OUT_TST)TrajectoriesTest.o
+TrajectoriesTest.o: TrajectoryHandler.o GLInterface.o
+	$(CC) $(CFLAGS)  $(TST_TRAJ) -o $(OUT_TST)TrajectoriesTest.o
 
 TrajectoryHandler.o: $(TRAJ_HANLDER_CPP)
-	$(CC) $(CFLAGS) $(TRAJ_HANLDER_CPP) -o $(OUT_TST)TrajectoryHandler.o
+	$(CC) $(CFLAGS) $(TRAJ_HANLDER_CPP) -o $(OUT_DIR)TrajectoryHandler.o
 
 GLInterface.o: $(GL_INTERFACE_CPP)
 	$(CC) $(CFLAGS) $(GL_INTERFACE_CPP) -o $(OUT_DIR)GLInterface.o
