@@ -6,7 +6,7 @@ void givenX1Y1X2Y2_whenMIsEqualUnder1_thenLineDraws(int argc, char* argv[]) {
     GLInterface* glInterface = new GLInterface();
     
     // When
-    trajectoryHandler->setfCoordinates(20, 20, 200, 200);
+    trajectoryHandler->setfCoordinates(0, 0, 1, 1);
     glInterface->setInstance(trajectoryHandler);
 
     // Then

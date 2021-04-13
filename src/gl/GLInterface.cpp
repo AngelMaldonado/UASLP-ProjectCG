@@ -1,11 +1,19 @@
 #include "../../include/glinterface.h"
+#include <iostream>
 
 GLInterface::GLInterface() {
-    wndWith = 800;
-    wndHeight = 800;
-    wndPosX = 50;
-    wndPosY = 50;
+    // Default framework viewing and window values
+    wndWith = wndHeight = 500;
+    wndPosX = wndPosY = 50;
     wndName = (char*)"Glut App";
+    matrixMode = GL_MODELVIEW;
+    orthoVleft = orthoVtop = 0;
+    orthoVright = orthoVtop = 1;
+    nearVal = -1; farVal = 1;
+    rotAngle = 0;
+    rotX = rotY = rotZ = 0;
+
+    view = VIEW_3D;
 }
 
 GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, char* wndName) {
@@ -17,7 +25,9 @@ GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, c
 }
 
 void GLInterface::displayWrapper() {
+    glClear(GL_COLOR_BUFFER_BIT);
     instance->display();
+    glFlush();
 }
 
 void GLInterface::runWrapper() {
@@ -48,10 +58,15 @@ void GLInterface::initView(void) {
     // Initialize viewing values
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glOrtho(-3.0, 3.0, -3.0, 3.0, -3.0, 3.0);
-
-    // Rotate the whole scene so that three faces of the cube are seen
-    glRotatef (30.0, 1.0, 1.0, 1.0);
+    //glOrtho(-3.0, 3.0, -3.0, 3.0, -3.0, 3.0);
+    if(view == VIEW_3D)
+    {
+        glOrtho(orthoVleft, orthoVright, orthoVbottom, orthoVtop, nearVal, farVal);
+        // Rotate the whole scene so that three faces of the cube are seen
+        glRotatef (rotAngle, rotX, rotY, rotZ);
+    }
+    else
+        gluOrtho2D(orthoVleft, orthoVright, orthoVbottom, orthoVtop);
 }
 
 void GLInterface::setInstance(GLInterface* framework) {
