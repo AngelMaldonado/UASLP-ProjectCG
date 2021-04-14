@@ -6,7 +6,11 @@ TrajectoryHandler::TrajectoryHandler() {
     fincrement = 0.05;
     ix1 = iy1 = ix2 = iy2 = -1;
     red = green = blue = 1;
-    alg = GEO_DRAW_LINE;
+    algorithm = ALG_GEO_DRAW_LINE;
+}
+
+void TrajectoryHandler::setAlgorithm(Algorithm algorithm) {
+    this->algorithm = algorithm;
 }
 
 void TrajectoryHandler::setfCoordinates(float fx1, float fy1, float fx2, float fy2) {
@@ -19,10 +23,15 @@ void TrajectoryHandler::setfIncrement(float fincrement) {
 }
 
 void TrajectoryHandler::display() {
-    switch(alg)
+    switch(algorithm)
     {
-        case GEO_DRAW_LINE:
+        case ALG_GEO_DRAW_LINE:
             geoDrawLine();
+        break;
+        case ALG_DDA_DRAW_LINE:
+        break;
+        case ALG_BRSNHM_DRAW_LINE:
+        break;
     }
 }
 void TrajectoryHandler::geoDrawLine() {

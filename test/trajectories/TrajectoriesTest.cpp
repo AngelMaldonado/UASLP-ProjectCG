@@ -8,7 +8,8 @@ void givenX1Y1X2Y2_whenMIsEqualUnder1_thenLineDraws(int argc, char* argv[]) {
     int x2 = 9; int y2 = 4;
     
     // WHEN
-    // TrajectoryHanler automatically computes the slope at geoDrawLine() 
+    // TrajectoryHanler automatically computes the slope at geoDrawLine()
+    trajectoryHandler->setAlgorithm(ALG_GEO_DRAW_LINE);
     trajectoryHandler->setfCoordinates(x1, y1, x2, y2);
     trajectoryHandler->setfIncrement(0.00001);
     glInterface->setInstance(trajectoryHandler);
