@@ -3,13 +3,13 @@
 
 GLInterface::GLInterface() {
     // Default framework viewing and window values
-    wndWith = wndHeight = 500;
-    wndPosX = wndPosY = 50;
-    wndName = (char*)"Glut App";
+    wndWith = wndHeight = DEF_WINDOW_SIZE;
+    wndPosX = wndPosY = DEF_WINDOW_POSXY;
+    wndName = (char*)DEF_WINDOW_NAME;
     matrixMode = GL_MODELVIEW;
-    orthoVleft = orthoVtop = 0;
+    orthoVleft = orthoVbottom = -1;
     orthoVright = orthoVtop = 1;
-    nearVal = -1; farVal = 1;
+    near = 0; far = 1;
     rotAngle = 0;
     rotX = rotY = rotZ = 0;
 
@@ -51,6 +51,17 @@ void GLInterface::startFramework(int argc, char *argv[]) {
     glutMainLoop();
 }
 
+void GLInterface::setView2D(GLenum matrixMode, 
+                            float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop) {
+    this->matrixMode = matrixMode;
+    this->orthoVleft = orthoVleft;
+    this->orthoVright = orthoVright;
+    this->orthoVbottom = orthoVbottom;
+    this->orthoVtop = orthoVtop;
+
+    view = VIEW_2D;
+}
+
 void GLInterface::initView(void) {
     // Select clearing (background) color
     glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -58,15 +69,14 @@ void GLInterface::initView(void) {
     // Initialize viewing values
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //glOrtho(-3.0, 3.0, -3.0, 3.0, -3.0, 3.0);
+        // Orthographic view
+        glOrtho(orthoVleft, orthoVright, orthoVbottom, orthoVtop, near, far);   
+
     if(view == VIEW_3D)
     {
-        glOrtho(orthoVleft, orthoVright, orthoVbottom, orthoVtop, nearVal, farVal);
         // Rotate the whole scene so that three faces of the cube are seen
         glRotatef (rotAngle, rotX, rotY, rotZ);
     }
-    else
-        gluOrtho2D(orthoVleft, orthoVright, orthoVbottom, orthoVtop);
 }
 
 void GLInterface::setInstance(GLInterface* framework) {
