@@ -6,10 +6,10 @@
  * TrajectoryHandler class: this class allow the handling of linear and curve trajectories, when an instance of this
  * class is created, it can draw or move objects calling the specific trajectory method.
  **/
-enum Algorithms {
-            GEO_DRAW_LINE = 1,
-            DDA_DRAW_LINE = 2,
-            BRSNHM_DRAW_LINE = 3
+enum Algorithm {
+            ALG_GEO_DRAW_LINE = 1,
+            ALG_DDA_DRAW_LINE = 2,
+            ALG_BRSNHM_DRAW_LINE = 3
         };
 
 class TrajectoryHandler : public GLInterface{
@@ -25,16 +25,19 @@ class TrajectoryHandler : public GLInterface{
         int red, green, blue;
 
         // Selected algorithm/method
-        int alg;
+        Algorithm algorithm;
     public:
         // Empty constructor
         TrajectoryHandler();
+
+        // Sets the algorithm that GLInterface is going to execute
+        void setAlgorithm(Algorithm algorithm);
 
         // Sets custom coordinates f values
         void setfCoordinates(float fx1, float fy1, float fx2, float fy2);
 
         // Sets custom fincrement
-        void setfIncrement(float fincrement);
+        void setfIncrement(float setfincrement);
 
         // Overrided display function from GLInterface
         virtual void display();
