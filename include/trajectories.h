@@ -1,6 +1,9 @@
 #pragma once
 #include "glinterface.h"
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 /**
  * TrajectoryHandler class: this class allow the handling of linear and curve trajectories, when an instance of this
@@ -23,9 +26,19 @@ class TrajectoryHandler : public GLInterface{
 
         // RGB line/curve values
         int red, green, blue;
+        // Pixel size for the points
+        float pointSize; 
+        // Drawing style for the line
+        GLenum lineStyle;
 
         // Selected algorithm/method
         Algorithm algorithm;
+
+        // Initialize the drawing line
+        void initDrawingTrajectory();
+
+        // Compute the slope of the given 2 pairs of coordinates
+        float slope(float x1, float y1, float x2, float y2);
     public:
         // Empty constructor
         TrajectoryHandler();
@@ -36,8 +49,14 @@ class TrajectoryHandler : public GLInterface{
         // Sets custom coordinates f values
         void setfCoordinates(float fx1, float fy1, float fx2, float fy2);
 
+        // Sets custom integer coordinates values
+        void setiCoordinates(int ix1, int iy1, int x2, int y2);
+
         // Sets custom fincrement
         void setfIncrement(float setfincrement);
+
+        // Sets custom drawing values for trajectories
+        void setDrawingValues(float pointSize, GLenum lineStyle, int red, int green, int blue);
 
         // Overrided display function from GLInterface
         virtual void display();
@@ -46,8 +65,8 @@ class TrajectoryHandler : public GLInterface{
         void geoDrawLine();
 
         // Draw a line following the DDA algorithm
-        void ddaDrawLine(int x1, int y1, int x2, int y2);
+        void ddaDrawLine();
 
         // Draw a line following the Bresenham algorithm
-        void bresenhamDrawLine(int x1, int y1, int x2, int y2);
+        void bresenhamDrawLine();
 };
