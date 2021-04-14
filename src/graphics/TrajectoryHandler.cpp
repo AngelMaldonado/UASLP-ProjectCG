@@ -3,6 +3,7 @@
 
 TrajectoryHandler::TrajectoryHandler() {
     fx1 = fy1 = fx2 = fy2 = -1;
+    fincrement = 0.05;
     ix1 = iy1 = ix2 = iy2 = -1;
     red = green = blue = 1;
     alg = GEO_DRAW_LINE;
@@ -11,6 +12,10 @@ TrajectoryHandler::TrajectoryHandler() {
 void TrajectoryHandler::setfCoordinates(float fx1, float fy1, float fx2, float fy2) {
     this->fx1 = fx1; this->fy1 = fy1;
     this->fx2 = fx2; this->fy2 = fy2;
+}
+
+void TrajectoryHandler::setfIncrement(float fincrement) {
+    this->fincrement = fincrement;
 }
 
 void TrajectoryHandler::display() {
@@ -29,20 +34,16 @@ void TrajectoryHandler::geoDrawLine() {
     // Compute b
     b = fy1 - m * fx1;
     
+    // Set the line color and point size
     glColor3f(red, green, blue);
     glPointSize(3.0);
 
     glBegin(GL_POINTS);
-        glVertex2i(0.5, 0.5);
-        glVertex3f(0.8, 0.8, 0);
-    glEnd();
-
-    glBegin(GL_LINES);
-    // Travel from x1 to x2 with some increment
-    for(x = fx1; x <= fx2; x++)
-    {
-        y = m * x + b;
-        glVertex3f(round(x), round(y), 0);
-    }
+        // Travel from x1 to x2 with some increment and start drawing the points
+        for(x = fx1; x <= fx2; x+=fincrement)
+        {
+            y = m * x + b;
+            glVertex2f(round(x), round(y));
+        }
     glEnd();
 }
