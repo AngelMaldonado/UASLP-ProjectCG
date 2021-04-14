@@ -16,6 +16,8 @@ class TrajectoryHandler : public GLInterface{
     private:
         // Foat coordinates values
         float fx1, fy1, fx2, fy2;
+        // Increment to the geometry methods
+        float fincrement;
         // Integer coordinates values
         int ix1, iy1, ix2, iy2;
 
@@ -30,6 +32,9 @@ class TrajectoryHandler : public GLInterface{
 
         // Sets custom coordinates f values
         void setfCoordinates(float fx1, float fy1, float fx2, float fy2);
+
+        // Sets custom fincrement
+        void setfIncrement(float fincrement);
 
         // Overrided display function from GLInterface
         virtual void display();
