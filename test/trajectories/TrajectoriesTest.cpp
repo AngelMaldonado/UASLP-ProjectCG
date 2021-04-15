@@ -209,6 +209,27 @@ void givenX1Y1X2Y2_whenBresenhamAlgorithmAndSlopeIsUndefined_thenLineDraws(int a
     glInterface->startFramework(argc, argv);
 }
 
+void givenP1P4R1R4_whenHermiteAlgorithm_thenCurveDraws(int argc, char* argv[]) {
+    // GIVEN
+    TrajectoryHandler* trajectoryHandler = new TrajectoryHandler();
+    GLInterface* glInterface = new GLInterface();
+    int xP1 = 20; int yP1 = 50;
+    int xP4 = 100; int yP4 = 50;
+    int xR1 = 20; int yR1 = 90;
+    int xR4 = 100; int yR4 = 10;
+
+    // WHEN
+    trajectoryHandler->setAlgorithm(ALG_HERMITE_DRAW_CURVE);
+    trajectoryHandler->setHermiteValues(xP1, yP1, xP4, yP4, xR1, yR1, xR4, yR4);
+    trajectoryHandler->setfIncrement(0.00001);
+    trajectoryHandler->setDrawingValues(1, GL_POINTS, 1, 1, 1);
+    glInterface->setInstance(trajectoryHandler);
+    glInterface->setView2D(GL_PROJECTION, 0, DEF_WINDOW_SIZE, 0, DEF_WINDOW_SIZE);
+
+    // THEN
+    glInterface->startFramework(argc, argv);
+}
+
 int main(int argc, char* argv[]) {
     // ***************** GEOMETRIC ALGORITHM TESTS *****************
     //givenX1Y1X2Y2_whenGeometricAlgorithmAndSlopeIs0_thenLineDraws(argc, argv);
@@ -226,5 +247,8 @@ int main(int argc, char* argv[]) {
     //givenX1Y1X2Y2_whenBresenhamAlgorithmAndSlopeIs1_thenLineDraws(argc, argv);
     //givenX1Y1X2Y2_whenBresenhamAlgorithmAndSlopeIsMoreThan1_thenLineDraws(argc, argv);
     //givenX1Y1X2Y2_whenBresenhamAlgorithmAndSlopeIsUndefined_thenLineDraws(argc, argv);
+
+    // ***************** HERMITE ALGORITHM TESTS *****************
+    givenP1P4R1R4_whenHermiteAlgorithm_thenCurveDraws(argc, argv);
     return 0;
 }
