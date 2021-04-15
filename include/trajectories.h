@@ -12,13 +12,16 @@ using namespace std;
 enum Algorithm {
             ALG_GEO_DRAW_LINE = 1,
             ALG_DDA_DRAW_LINE = 2,
-            ALG_BRSNHM_DRAW_LINE = 3
+            ALG_BRSNHM_DRAW_LINE = 3,
+            ALG_HERMITE_DRAW_CURVE = 4
         };
 
 class TrajectoryHandler : public GLInterface{
     private:
-        // Foat coordinates values
+        // Float coordinates values
         float fx1, fy1, fx2, fy2;
+        // Float coordinates to set the vectors to hermite curves
+        float fxR1, fyR1, fxR2, fyR2;
         // Increment to the geometry methods
         float fincrement;
         // Integer coordinates values
@@ -49,6 +52,10 @@ class TrajectoryHandler : public GLInterface{
         // Sets custom coordinates f values
         void setfCoordinates(float fx1, float fy1, float fx2, float fy2);
 
+        // Sets custom hermite curve values
+        void setHermiteValues(float xP1, float yP1, float xP4, float yP4,
+                              float xR1, float yR1, float xR4, float yR4);
+
         // Sets custom integer coordinates values
         void setiCoordinates(int ix1, int iy1, int x2, int y2);
 
@@ -69,4 +76,7 @@ class TrajectoryHandler : public GLInterface{
 
         // Draw a line following the Bresenham algorithm
         void bresenhamDrawLine();
+
+        // Draw a curve following the Hermite algorithm
+        void hermiteDrawCurve();
 };
