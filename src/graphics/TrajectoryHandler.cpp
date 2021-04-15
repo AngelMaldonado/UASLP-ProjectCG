@@ -30,6 +30,14 @@ void TrajectoryHandler::setfCoordinates(float fx1, float fy1, float fx2, float f
     this->fx2 = fx2; this->fy2 = fy2;
 }
 
+void TrajectoryHandler::setHermiteValues(float xP1, float yP1, float xP4, float yP4,
+                                         float xR1, float yR1, float xR4, float yR4) {
+        fx1 = xP1; fy1 = yP1;
+        fx2 = xP4; fy2 = yP4;
+        fxR1 = xR1; fyR1 = yR1;
+        fxR2 = xR4; fyR2 = yR4;
+    }
+
 void TrajectoryHandler::setiCoordinates(int ix1, int iy1, int ix2, int iy2) {
     this->ix1 = ix1; this->iy1 = iy1;
     this->ix2 = ix2; this->iy2 = iy2;
@@ -57,6 +65,8 @@ void TrajectoryHandler::display() {
         case ALG_BRSNHM_DRAW_LINE:
             bresenhamDrawLine();
         break;
+        case ALG_HERMITE_DRAW_CURVE:
+            hermiteDrawCurve();
     }
 }
 void TrajectoryHandler::geoDrawLine() {
@@ -147,6 +157,25 @@ void TrajectoryHandler::bresenhamDrawLine() {
                     pk = pk + _2dx_Minus_2dy;
                 }
             }
+        }
+    glEnd();
+}
+
+void TrajectoryHandler::hermiteDrawCurve() {
+    float t;
+    float x, y;
+
+    initDrawingTrajectory();
+
+    glBegin(lineStyle);
+        for(t = 0; t <= 1; t += fincrement)
+        {
+            x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*fx1 + (-2*pow(t, 3) + 3*pow(t, 2))*fx2
+                + (pow(t, 3) - 2*pow(t, 2) + t)*fxR1 + (pow(t, 3) - pow(t, 2))*fxR2;
+            y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*fy1 + (-2*pow(t, 3) + 3*pow(t, 2))*fy2
+                + (pow(t, 3) - 2*pow(t, 2) + t)*fyR1 + (pow(t, 3) - pow(t, 2))*fyR2;
+            
+            glVertex2i(round(x), round(y));
         }
     glEnd();
 }
