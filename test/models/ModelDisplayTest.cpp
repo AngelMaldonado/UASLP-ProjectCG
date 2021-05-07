@@ -1,17 +1,16 @@
 //
 // Created by Angel Maldonado on 3/4/2021.
 //
-#include "../include/objreader.h"
-#include "../include/glinterface.h"
+#include "../../include/objreader.h"
+#include "../../include/glinterface.h"
 
-int main(int argc, char* argv[]) {
+class Drawable : public GLInterface {
+    public:
+        vector<Mesh> object;
+        virtual void display();
+};
 
-    return 0;
-}
-
-vector<Mesh> meshes;
-
-void displayMesh() {
+void Drawable::display() {
     // Local array of primitive coorinates of vertices (x, y, z)
     double* vertices;
 
@@ -21,7 +20,7 @@ void displayMesh() {
     glColor3f (1.0, 1.0, 1.0);
     
     // For each stored mesh in vector<Mesh>
-    for(Mesh mesh : meshes)
+    for(Mesh mesh : object)
     {
         // For each Face that mesh has
         for (Face face : mesh.getFaces()) 
@@ -46,15 +45,19 @@ void displayMesh() {
 void givenModel_whenCertainViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {
     // Given
     OBJFileReader fileReader;
-    GLInterface glInterface = GLInterface();
-    meshes = fileReader.readFile("models/monkey.obj", 'n');
-    
+    Drawable *drawableObject = new Drawable();
+    GLInterface *glInterface = new GLInterface();
+    drawableObject->object = fileReader.readFile("models/monkey.obj", 'n');
+
     // When
-    glInterface.initGLWindow(argc, argv, 300, 300, 100, 100);
-    glInterface.initView();
-    glInterface.setDisplayFunction(displayMesh);
+    glInterface->setInstance(drawableObject);
 
     // Then
-    glInterface.startGLloop();
+    glInterface->startFramework(argc, argv);
 }
 
+int main(int argc, char* argv[]) {
+    givenModel_whenCertainViewAndCertainDisplayFunction_thenModelDisplays(argc, argv);
+
+    return 0;
+}

@@ -10,8 +10,20 @@
 #define DEF_WINDOW_NAME "OpenGL - Custom framework App"
 
 /**
- * To use this interface subclasses are necessary to use the callbacks
+ * To use this interface subclasses are necessary to use the callbacks:
+ * example: 
+ * SomeSubclass *mySubClass = new SomeSubClass();
+ * GLInterface *glInterface = new GLInterface();
+ * 
+ * mySubClass->someOperations(void someParameters);
+ * glInterface->setView();
+ * 
+ * glInterface->setInstance(mySubClass);
+ * 
+ * glInterface->startFramework();
  */
+
+// Enum with the different views for frameworks (2D and 3D)
 enum View {
     VIEW_3D,
     VIEW_2D
@@ -21,23 +33,53 @@ class GLInterface {
     protected:
         /*
          * This is an instance pointer of GLInterface class to be able to instantiante the
-         * function calls.
+         * function callbacks.
          */
         static GLInterface *instance;
     private:
-        // Window values
-        int wndWith, wndHeight;
-        int wndPosX, wndPosY;
+        // Window's width in pixels
+        int wndWith;
+        // Window's height in pixels
+        int wndHeight;
+        // Window's X position in pixels
+        int wndPosX;
+        // Window's Y position in pixels
+        int wndPosY;
+        // Window's name
         char* wndName;
+
+        // Viewing matrix mode (OpenGL)
         GLenum matrixMode;
-        float orthoVleft, orthoVright, orthoVbottom, orthoVtop;
+        // Ortho left value in pixels (OpenGL)
+        float orthoVleft;
+        // Ortho right value in pixels (OpenGL)
+        float orthoVright;
+        // Ortho bottom value in pixels (OpenGL)
+        float orthoVbottom;
+        // Ortho top value in pixels (OpenGL)
+        float orthoVtop;
+        // Z near value in pixels (OpenGL)
+        float near;
+        // Z far value in pixels (OpenGL)
+        float far;
+        // Camera's rotating angle value (OpenGL)
+        float rotAngle;
+        // Percentage of the rotAngle in X
+        float rotX;
+        // Percentage of the rotAngle in Y
+        float rotY;
+        // Percentage of the rotAngle in Z
+        float rotZ;
+
+        /************************/
         float fov;
         float aspect;
-        float near, far;
-        float rotAngle, rotX, rotY, rotZ;
 
-        // This variable sets the 3D or 2D view of the framework
+        // Variable to set the 3D or 2D view of the framework instance
         View view;
+
+        // Time variable for the timer function of OpenGL
+        unsigned int time;
     public:
         // Empty GLInterface constructor
         GLInterface();
@@ -46,20 +88,23 @@ class GLInterface {
 
         // Main display function of OpenGL framework
         static void displayWrapper();
-        // Function to include in glutIdleFunc
-        static void runWrapper();
-        // Function to set the window's viewing values
+        // Instance wrapper for the glutIdleFunc
+        static void runWrapper(int timerValue);
+
+        // Set the 2D window's viewing values
         void setView2D(GLenum matrixMode,
                        float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop);
-        // Function to initialize the 3D view
+
+        // Initialize the window's view
         void initView (void);
         // Starts the main framework
         void startFramework(int argc, char *argv[]);
+
         // Run app
         void run();
         // Display function
         virtual void display(void);
 
-        // Function to set instance to GLInterface
+        // Set instance to GLInterface
         static void setInstance(GLInterface* framework);
 };

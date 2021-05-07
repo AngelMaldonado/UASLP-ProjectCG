@@ -1,9 +1,9 @@
 #include "../../include/trajectories.h"
 
-void TrajectoryHandler::initDrawingTrajectory() {
+void TrajectoryHandler::initDrawingTrajectory(Brush brush) {
     // Set the line color and point size
-    glColor3f(red, green, blue);
-    glPointSize(pointSize);
+    glColor3f(brush.red, brush.green, brush.blue);
+    glPointSize(brush.pointSize);
 }
 
 float TrajectoryHandler::slope(float x1, float y1, float x2, float y2) {
@@ -11,57 +11,56 @@ float TrajectoryHandler::slope(float x1, float y1, float x2, float y2) {
     return m;
 }
 
+void TrajectoryHandler::initBresenham() {
+    bresenham.dx = bresenham.p2.x - bresenham.p1.x, bresenham.dy = bresenham.p2.y - bresenham.p1.y;
+    bresenham._2dy = 2 * bresenham.dy, bresenham._2dx = 2 * bresenham.dx;
+    bresenham.n = max(abs(bresenham.dx), abs(bresenham.dy));
+    bresenham.m = slope(bresenham.p1.x, bresenham.p1.y, bresenham.p2.x, bresenham.p2.y);
+}
+
 TrajectoryHandler::TrajectoryHandler() {
-    fx1 = fy1 = fx2 = fy2 = -1;
-    fincrement = 0.05;
-    ix1 = iy1 = ix2 = iy2 = -1;
-    red = green = blue = 1;
-    pointSize = 1;
-    lineStyle = GL_POINTS;
-    algorithm = ALG_GEO_DRAW_LINE;
+    algorithm = ALG_BRSNHM_DRAW_LINE;
 }
 
 void TrajectoryHandler::setAlgorithm(Algorithm algorithm) {
     this->algorithm = algorithm;
 }
 
-void TrajectoryHandler::setfCoordinates(float fx1, float fy1, float fx2, float fy2) {
-    this->fx1 = fx1; this->fy1 = fy1;
-    this->fx2 = fx2; this->fy2 = fy2;
+void TrajectoryHandler::setBresenhamValues(float fx1, float fy1, float fx2, float fy2,
+                                int red, int green, int blue, float pointSize, GLenum lineStyle) {
+    bresenham.p1.x = fx1; bresenham.p1.y = fy1;
+    bresenham.p2.x = fx2; bresenham.p2.y = fy2;
+    
+    bresenham.brush.red = red;
+    bresenham.brush.green = green;
+    bresenham.brush.blue = blue;
+    bresenham.brush.pointSize = pointSize;
+    bresenham.brush.lineStyle = lineStyle;
+
+    initBresenham();
 }
 
 void TrajectoryHandler::setHermiteValues(float xP1, float yP1, float xP4, float yP4,
-                                         float xR1, float yR1, float xR4, float yR4) {
-        fx1 = xP1; fy1 = yP1;
-        fx2 = xP4; fy2 = yP4;
-        fxR1 = xR1; fyR1 = yR1;
-        fxR2 = xR4; fyR2 = yR4;
+                                         float xR1, float yR1, float xR4, float yR4,
+                                         float increment,
+                                         int red, int green, int blue, float pointSize, GLenum lineStyle) {
+        hermite.p1.x = xP1; hermite.p1.y = yP1;
+        hermite.p4.x = xP4; hermite.p4.y = yP4;
+        hermite.r1.x = xR1; hermite.r1.y = yR1;
+        hermite.r4.x = xR4; hermite.r4.y = yR4;
+
+        hermite.increment = increment;
+
+        hermite.brush.red = red;
+        hermite.brush.green = green;
+        hermite.brush.blue = blue;
+        hermite.brush.pointSize = pointSize;
+        hermite.brush.lineStyle = lineStyle;
     }
-
-void TrajectoryHandler::setiCoordinates(int ix1, int iy1, int ix2, int iy2) {
-    this->ix1 = ix1; this->iy1 = iy1;
-    this->ix2 = ix2; this->iy2 = iy2;
-}
-
-void TrajectoryHandler::setfIncrement(float fincrement) {
-    this->fincrement = fincrement;
-}
-
-void TrajectoryHandler::setDrawingValues(float pointSize, GLenum lineStyle, int red, int green, int blue) {
-    this->pointSize = pointSize;
-    this->lineStyle = lineStyle;
-    this->red = red; this->green = green; this->blue = blue;
-}
 
 void TrajectoryHandler::display() {
     switch(algorithm)
     {
-        case ALG_GEO_DRAW_LINE:
-            geoDrawLine();
-        break;
-        case ALG_DDA_DRAW_LINE:
-            ddaDrawLine();
-        break;
         case ALG_BRSNHM_DRAW_LINE:
             bresenhamDrawLine();
         break;
@@ -69,92 +68,48 @@ void TrajectoryHandler::display() {
             hermiteDrawCurve();
     }
 }
-void TrajectoryHandler::geoDrawLine() {
-    // m -> slope, b-> point that intersects with y axis, x and y -> coordinates to draw
-    float m, b, x, y;
-
-    // Compute the slope (m)
-    m = slope(fx1, fy1, fx2, fy2);
-    // Compute b
-    b = fy1 - m * fx1;
-    
-    initDrawingTrajectory();
-
-    glBegin(lineStyle);
-        // Travel from x1 to x2 with some increment and start drawing the points
-        for(x = fx1; x <= fx2; x+=fincrement)
-        {
-            y = m * x + b;
-            glVertex2f(x, y);
-        }
-    glEnd();
-}
-
-void TrajectoryHandler::ddaDrawLine() {
-    float x, y;
-    int dx = ix2 - ix1, dy = iy2 - iy1;
-    int n = max(abs(dx), abs(dy));
-    float dt = n, dxdt = dx / dt, dydt = dy / dt;
-
-    x = ix1;
-    y = iy1;
-    initDrawingTrajectory();
-
-    glBegin(lineStyle);
-        while(n--) {
-            glVertex2i((x), (y));
-            x += dxdt;
-            y += dydt;
-        }
-    glEnd();
-}
 
 void TrajectoryHandler::bresenhamDrawLine() {
     float x, y;
-    int pk;
-    int dx = ix2 - ix1, dy = iy2 - iy1;
-    int _2dy = 2 * dy, _2dx = 2 * dx;
-    int _2dy_Minus_2dx, _2dx_Minus_2dy;
-    int n = max(abs(dx), abs(dy));
-    float m = slope(ix1, iy1, ix2, iy2);
+    int n = bresenham.n;
     
-    x = ix1;
-    y = iy1;
-    initDrawingTrajectory();
+    x = bresenham.p1.x;
+    y = bresenham.p1.y;
+    initDrawingTrajectory(bresenham.brush);
 
-    glBegin(lineStyle);
-        if(m >= 0 && m <= 1) {
-            _2dy_Minus_2dx = _2dy - _2dx;
-            pk = _2dy - dx;
+    glBegin(bresenham.brush.lineStyle);
+        if(bresenham.m >= 0 && bresenham.m <= 1) {
+            bresenham._2dy_Minus_2dx = bresenham._2dy - bresenham._2dx;
+            bresenham.pk = bresenham._2dy - bresenham.dx;
 
             while(n--) {
-                if(pk < 0)
+                if(bresenham.pk < 0)
                 {
                     glVertex2i(++x, y);
-                    pk = pk + _2dy;
+                    bresenham.pk = bresenham.pk + bresenham._2dy;
                 }
                 else
                 {
                     glVertex2i(++x, ++y);
-                    pk = pk + _2dy_Minus_2dx;
+                    bresenham.pk = bresenham.pk + bresenham._2dy_Minus_2dx;
                 }
             }
         }
-        else if(m > 1)
+        else if(bresenham.m > 1)
         {
-            _2dx_Minus_2dy = _2dx - _2dy;
-            pk = _2dx - dy;
+            bresenham._2dx_Minus_2dy = bresenham._2dx - bresenham._2dy;
+            bresenham.pk = bresenham._2dx - bresenham.dy;
 
             while(n--) {
-                if(pk < 0)
+                if(bresenham.pk < 0)
                 {
                     glVertex2i(x, ++y);
-                    pk = pk + _2dx;
+                    bresenham.pk = bresenham.pk + bresenham._2dx;
                 }
                 else
                 {
                     glVertex2i(++x, ++y);
-                    pk = pk + _2dx_Minus_2dy;
+                    bresenham.pk = bresenham.pk + bresenham._2dx_Minus_2dy;
                 }
             }
         }
@@ -164,16 +119,16 @@ void TrajectoryHandler::bresenhamDrawLine() {
 void TrajectoryHandler::hermiteDrawCurve() {
     float t;
     float x, y;
+    
+    initDrawingTrajectory(hermite.brush);
 
-    initDrawingTrajectory();
-
-    glBegin(lineStyle);
-        for(t = 0; t <= 1; t += fincrement)
+    glBegin(hermite.brush.lineStyle);
+        for(t = 0; t <= 1; t += hermite.increment)
         {
-            x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*fx1 + (-2*pow(t, 3) + 3*pow(t, 2))*fx2
-                + (pow(t, 3) - 2*pow(t, 2) + t)*fxR1 + (pow(t, 3) - pow(t, 2))*fxR2;
-            y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*fy1 + (-2*pow(t, 3) + 3*pow(t, 2))*fy2
-                + (pow(t, 3) - 2*pow(t, 2) + t)*fyR1 + (pow(t, 3) - pow(t, 2))*fyR2;
+            x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.x + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.x
+                + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.x + (pow(t, 3) - pow(t, 2))*hermite.r4.x;
+            y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.y + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.y
+                + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.y + (pow(t, 3) - pow(t, 2))*hermite.r4.y;
             
             glVertex2i(round(x), round(y));
         }
