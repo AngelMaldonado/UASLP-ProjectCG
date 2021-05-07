@@ -47,10 +47,11 @@ void givenModel_whenCertainViewAndCertainDisplayFunction_thenModelDisplays(int a
     OBJFileReader fileReader;
     Drawable *drawableObject = new Drawable();
     GLInterface *glInterface = new GLInterface();
-    drawableObject->object = fileReader.readFile("models/monkey.obj", 'n');
+    drawableObject->object = fileReader.readFile("objs/test/monkey.obj", 'n');
 
     // When
     glInterface->setInstance(drawableObject);
+    glInterface->setView3D(GL_PROJECTION, -3, 3, -3, 3, -3, 3, 180, 0, 1, 0);
 
     // Then
     glInterface->startFramework(argc, argv);

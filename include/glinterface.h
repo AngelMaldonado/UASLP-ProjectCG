@@ -94,6 +94,10 @@ class GLInterface {
         // Set the 2D window's viewing values
         void setView2D(GLenum matrixMode,
                        float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop);
+        // Set the 3D windo's viewing values
+        void setView3D(GLenum matrixMode,
+                       float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop,
+                       float near, float far, float rotAngle, float rotX, float rotY, float rotZ);
 
         // Initialize the window's view
         void initView (void);
