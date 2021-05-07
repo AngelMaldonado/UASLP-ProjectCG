@@ -14,6 +14,8 @@ GLInterface::GLInterface() {
     rotX = rotY = rotZ = 0;
 
     view = VIEW_3D;
+
+    time = 20;
 }
 
 GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, char* wndName) {
@@ -30,8 +32,11 @@ void GLInterface::displayWrapper() {
     glFlush();
 }
 
-void GLInterface::runWrapper() {
+void GLInterface::runWrapper(int timerValue) {
+    timerValue = instance->time;
     instance->run();
+    glutPostRedisplay();
+    glutTimerFunc(timerValue, runWrapper, 0);
 }
 
 void GLInterface::startFramework(int argc, char *argv[]) {
@@ -47,7 +52,8 @@ void GLInterface::startFramework(int argc, char *argv[]) {
     glutDisplayFunc(displayWrapper);
 
     // Start the main GLUT loop/thread
-    //glutIdleFunc(runWrapper);
+    glutTimerFunc(instance->time, runWrapper, 0);
+
     glutMainLoop();
 }
 

@@ -219,7 +219,7 @@ void OBJFileReader::printInfoAsFile(vector<Mesh> meshes) {
     }while(userResponse != 'N' && userResponse != 'Y');
 	if(userResponse == 'Y') {
 		// Print the meshes
-		for (int mesh = 0; mesh < meshes.size(); mesh++) {
+		for (int mesh = 0; mesh < (int)meshes.size(); mesh++) {
 		    cout << "o " << meshes[mesh].getMeshName() << '\n';
 		    // Print the vertices of mesh
 		    for(Vertex vertex : meshes[mesh].getVertices()) {
