@@ -68,6 +68,22 @@ void GLInterface::setView2D(GLenum matrixMode,
     view = VIEW_2D;
 }
 
+void GLInterface::setView3D(GLenum matrixMode,
+                            float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop,
+                            float near, float far, float rotAngle, float rotX, float rotY, float rotZ) {
+    this->matrixMode = matrixMode;
+    this->orthoVleft = orthoVleft;
+    this->orthoVright = orthoVright;
+    this->orthoVbottom = orthoVbottom;
+    this->orthoVtop = orthoVtop;
+    this->near = near;
+    this->far = far;
+    this->rotAngle = rotAngle;
+    this->rotX = rotX;
+    this->rotY = rotY;
+    this->rotZ = rotZ;
+}
+
 void GLInterface::initView(void) {
     // Select clearing (background) color
     glClearColor (0.0, 0.0, 0.0, 0.0);
