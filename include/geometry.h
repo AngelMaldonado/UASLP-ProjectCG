@@ -26,6 +26,9 @@ private:
     double z;
 
 public:
+    // Default constructor
+    Vertex();
+
     // Constructor for Vertex with user-defined coordinates.
     Vertex(double x, double y, double z);
 
@@ -50,6 +53,15 @@ public:
     //Returns the z coordinate
     double getZ();
 
+    // Set the x coordinate
+    void setX(double x);
+
+    // Set the y coordinate
+    void setY(double y);
+
+    // Set the z coordinate
+    void setZ(double);
+
     // Returns an array with the coordinates
     double * getCoordinates();
 };
@@ -63,10 +75,10 @@ public:
 class Face {
 private:
     // Vector of Vertex objects
-    vector <Vertex> vertices;
+    vector <int> vertices;
 public:
     // Constructor for the Face with a vector of Vertices
-    Face(vector <Vertex> vertices);
+    Face(vector <int> vertices);
 
     // Shows the stored Face with simple format
     void showsFaceFormatted();
@@ -75,7 +87,7 @@ public:
     void showFace();
 
     // Returns the vector of Vertices
-    vector <Vertex> getVertices();
+    vector<int> getVertices();
 };
 
 
@@ -105,7 +117,7 @@ public:
     bool addVertex(vector<double> coordinates);
     
     // Add a new Face to the Mesh passing a vector with its vertices
-    bool addFace(vector <Vertex> vertices);
+    bool addFace(vector<int> vertices);
 
     Face getFace(int index);
 
@@ -116,13 +128,19 @@ public:
     Face getLastFace();
 
     // Returns the vector of Vertex that compose the Mesh
-    vector<Vertex> getVertices();
+    vector<Vertex> &getVertices();
 
     // Returns the last Vertex added to the Mesh
     Vertex getLastVertex();
 
     // Returns certain Vertex by index
     Vertex getVertex(int vertexIndex);
+
+    // Returns a pointer to the 3 coordinates that makes the face vertex
+    double *getFaceVertex(int vertexIndex);
+
+    // Modifies the coordinates of a Vertex
+    void setVertexCoordinates(double x, double y, double z, int vertexIndex);
 
     // Returns the Mesh name
     string getMeshName();
