@@ -86,7 +86,7 @@ public:
     // Shows the Vertices that the Faces are made of
     void showFace();
 
-    // Returns the vector of Vertices
+    // Returns the vector of the vertices indices
     vector<int> getVertices();
 };
 
@@ -137,7 +137,7 @@ public:
     Vertex getVertex(int vertexIndex);
 
     // Returns a pointer to the 3 coordinates that makes the face vertex
-    double *getFaceVertex(int vertexIndex);
+    double *getVertexAsArray(int vertexIndex);
 
     // Modifies the coordinates of a Vertex
     void setVertexCoordinates(double x, double y, double z, int vertexIndex);

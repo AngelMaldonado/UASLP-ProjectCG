@@ -1,4 +1,4 @@
-#include "../../include/trajectories.h"
+#include "../../include/transformations.h"
 
 void TrajectoryHandler::initDrawingTrajectory(Brush brush) {
     // Set the line color and point size
@@ -42,14 +42,14 @@ void TrajectoryHandler::setBresenhamValues(float fx1, float fy1, float fx2, floa
     initBresenham();
 }
 
-void TrajectoryHandler::setHermiteValues(float xP1, float yP1, float xP4, float yP4,
-                                         float xR1, float yR1, float xR4, float yR4,
+void TrajectoryHandler::setHermiteValues(float xP1, float yP1, float zP1, float xP4, float yP4, float zP4,
+                                         float xR1, float yR1, float zR1, float xR4, float yR4, float zR4,
                                          float increment,
                                          int red, int green, int blue, float pointSize, GLenum lineStyle) {
-        hermite.p1.x = xP1; hermite.p1.y = yP1;
-        hermite.p4.x = xP4; hermite.p4.y = yP4;
-        hermite.r1.x = xR1; hermite.r1.y = yR1;
-        hermite.r4.x = xR4; hermite.r4.y = yR4;
+        hermite.p1.x = xP1; hermite.p1.y = yP1; hermite.p1.z = zP1;
+        hermite.p4.x = xP4; hermite.p4.y = yP4; hermite.p4.z = zP4;
+        hermite.r1.x = xR1; hermite.r1.y = yR1; hermite.r1.z = zR1;
+        hermite.r4.x = xR4; hermite.r4.y = yR4; hermite.r4.z = zR4;
 
         hermite.increment = increment;
         hermite.t = 0.0;
@@ -236,27 +236,19 @@ void TrajectoryHandler::hermiteAnimateObject(vector<Mesh> &object, Coordinates &
                 origin.z = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.z + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.z
                          + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.z + (pow(t, 3) - pow(t, 2))*hermite.r4.z;
                 
+                
+                if(dy > origin.y)
+                    dy = -1;
+                else
+                    dy = origin.y - dy;
                 dx = origin.x - dx;
-                dy = origin.y - dy;
                 dz = origin.z - dz;
-
-                for(int o = 0; o < (int)object.size(); o++)
-                    for(int v = 0; v < (int)object[o].getVertices().size(); v++)
-                    {
-                        object[o].setVertexCoordinates(object[o].getVertices()[v].getX()+dx,
-                                                       object[o].getVertices()[v].getY()+dy,
-                                                       object[o].getVertices()[v].getZ()+dz, v);
-                    }
+                
+                TransformationsHandler::translateObject(object, dx, dy, dz);
                 hermite.t += hermite.increment;
             } else hermite.objectDirection = O_BACKWARDS;
         break;
         case O_BACKWARDS:
         break;
     }
-}
-
-
-
-void TrajectoryHandler::trasnlatePoint(Coordinates &point, float dx, float dy, float dz) {
-    point.x = point.x + dx, point.y = point.y + dy, point.z = point.z + dx;
 }

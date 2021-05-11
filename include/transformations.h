@@ -137,8 +137,8 @@ class TrajectoryHandler : public GLInterface{
                                 int red, int green, int blue, float pointSize, GLenum lineStyle);
 
         // Sets custom hermite curve values
-        void setHermiteValues(float xP1, float yP1, float xP4, float yP4,
-                              float xR1, float yR1, float xR4, float yR4,
+        void setHermiteValues(float xP1, float yP1, float zP1,float xP4, float yP4, float zP4,
+                              float xR1, float yR1, float zR1, float xR4, float yR4, float zR4,
                               float increment,
                               int red, int green, int blue, float pointSize, GLenum lineStyle);
 
@@ -159,8 +159,25 @@ class TrajectoryHandler : public GLInterface{
 
         // Animate an object with a predefined Hermite curve trajectory
         void hermiteAnimateObject(vector<Mesh> &object, Coordinates &origin);
+};
 
-
-
-        static void trasnlatePoint(Coordinates &point, float dx, float dy, float dz);
+class TransformationsHandler {
+    private:
+        // Translation Matrix
+        double translationMatrix[4][4];
+        // Rotation Matrix for X axis
+        double rotMatrixX[4][4];
+        // Rotation Matrix for Y axis
+        double rotMatrixY[4][4];
+        // Rotation Matrix for Z axis
+        double rotMatrixZ[4][4];
+        // Matrix composition    
+        double matrixComposition[4][4];
+    public:
+        // Translate an object at T[dx, dy, dz, 1]
+        static void translateObject(vector<Mesh> &object, double dx, double dy, double dz);
+        // Scale an object
+        static void scaleObject(vector<Mesh> &object, double scalingValue);
+        // Rotate an object
+        static void rotateObject(vector<Mesh> &object, Coordinates origin, double rx, double ry, double rz);
 };
