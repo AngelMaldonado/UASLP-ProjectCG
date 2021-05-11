@@ -8,23 +8,25 @@ using namespace std;
 #endif
 #include "../../include/geometry.h"
 
-Face::Face(vector<Vertex> vertices) {
-    this->vertices = vertices;
+Face::Face(vector<int> vertices) {
+    //copy(vertices.begin(), vertices.end(), back_inserter(this->vertices));
+    for(int vertex : vertices)
+        this->vertices.push_back(vertex);
 }
 
 void Face::showsFaceFormatted() {
     cout << "Face composed of: \n";
-        for(Vertex vertex : vertices)
-            vertex.showCoordinatesFormatted();
-        cout << '\n';
+    for(int vertex : vertices)
+        cout << "Vertex #" << vertex << ' ';
+    cout << '\n';
 }
 
 void Face::showFace() {
-    for(Vertex vertex : vertices) {
-            cout << vertex.getIndex() << ' ';
+    for(int vertex : vertices) {
+            cout << vertex << ' ';
         } cout << '\n';
 }
 
-vector<Vertex> Face::getVertices() {
+vector<int> Face::getVertices() {
     return vertices;
 }

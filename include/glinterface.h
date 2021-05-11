@@ -77,10 +77,10 @@ class GLInterface {
 
         // Variable to set the 3D or 2D view of the framework instance
         View view;
-
+    public:
         // Time variable for the timer function of OpenGL
         unsigned int time;
-    public:
+
         // Empty GLInterface constructor
         GLInterface();
         // Custom window values for GLInterface constructor
@@ -105,7 +105,7 @@ class GLInterface {
         void startFramework(int argc, char *argv[]);
 
         // Run app
-        void run();
+        virtual void run();
         // Display function
         virtual void display(void);
 

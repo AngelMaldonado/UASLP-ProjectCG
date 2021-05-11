@@ -24,7 +24,7 @@ bool Mesh::addVertex(vector<double> coordinates) {
     return false;
 }
 
-bool Mesh::addFace(vector<Vertex> vertices) {
+bool Mesh::addFace(vector<int> vertices) {
     // Validate the amount of vertices to make a face
     if (vertices.size() >= 3) {
         // Store the face in the list of Face's objects
@@ -47,7 +47,7 @@ Face Mesh::getLastFace() {
     return faces.back();
 }
 
-vector<Vertex> Mesh::getVertices() {
+vector<Vertex> &Mesh::getVertices() {
     return vertices;
 }
 
@@ -57,6 +57,20 @@ Vertex Mesh::getLastVertex() {
 
 Vertex Mesh::getVertex(int vertexIndex) {
     return vertices.at(vertexIndex);
+}
+
+double *Mesh::getFaceVertex(int vertexIndex) {
+    double *coordinates = new double(3);
+    coordinates[0] = vertices.at(vertexIndex).getX();
+    coordinates[1] = vertices.at(vertexIndex).getY();
+    coordinates[2] = vertices.at(vertexIndex).getZ();
+    return coordinates;
+}
+
+void Mesh::setVertexCoordinates(double x, double y, double z, int vertexIndex) {
+    vertices[vertexIndex].setX(x);
+    vertices[vertexIndex].setY(y);
+    vertices[vertexIndex].setZ(z);
 }
 
 string Mesh::getMeshName() {

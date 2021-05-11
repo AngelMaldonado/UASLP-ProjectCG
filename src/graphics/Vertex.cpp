@@ -42,6 +42,18 @@ double Vertex::getZ() {
     return y;
 }
 
+void Vertex::setX(double x) {
+    this->x = x;
+}
+
+void Vertex::setY(double y) {
+    this->y = y;
+}
+
+void Vertex::setZ(double z) {
+    this->z = z;
+}
+
 double * Vertex::getCoordinates() {
     double* coordinates = new double[3];
     coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;

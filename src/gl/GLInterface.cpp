@@ -29,14 +29,13 @@ GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, c
 void GLInterface::displayWrapper() {
     glClear(GL_COLOR_BUFFER_BIT);
     instance->display();
-    glFlush();
+    glutSwapBuffers();
 }
 
 void GLInterface::runWrapper(int timerValue) {
-    timerValue = instance->time;
     instance->run();
     glutPostRedisplay();
-    glutTimerFunc(timerValue, runWrapper, 0);
+    glutTimerFunc(timerValue, runWrapper, timerValue);
 }
 
 void GLInterface::startFramework(int argc, char *argv[]) {
@@ -52,7 +51,7 @@ void GLInterface::startFramework(int argc, char *argv[]) {
     glutDisplayFunc(displayWrapper);
 
     // Start the main GLUT loop/thread
-    glutTimerFunc(instance->time, runWrapper, 0);
+    glutTimerFunc(instance->time, runWrapper, instance->time);
 
     glutMainLoop();
 }
