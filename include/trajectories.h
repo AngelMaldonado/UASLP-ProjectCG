@@ -1,5 +1,6 @@
 #pragma once
 #include "glinterface.h"
+#include "geometry.h"
 #include <math.h>
 #include <iostream>
 
@@ -13,6 +14,12 @@ enum Algorithm {
             ALG_BRSNHM_DRAW_LINE = 1,
             ALG_HERMITE_DRAW_CURVE = 2
         };
+
+// Object's directions
+enum Direction {
+    O_TOWARDS = 1,
+    O_BACKWARDS
+};
 
 // Brush to paint the line/curve
 typedef struct {
@@ -34,26 +41,40 @@ typedef struct {
     float x;
     // Y coordinate
     float y;
+    // Z coordinate
+    float z;
 } Coordinates;
 
 // Values for Bresenham algorithm
 typedef struct {
     // Dx for Bresenham
-    int dx;
+    int dx, dx2;
     // Dy for Bresenham
-    int dy;
+    int dy, dy2;
     // Amount of steps for Bresenham
     int n;
-    // Decision parameter for Bresenham
+    // Decision parameter 1 for Bresenham
     int pk;
+    // Decision parameter 1 for Bresenham
+    int pk2;
     // 2dy value for Bresenham
     int _2dy;
     // 2dx value for Bresenham
     int _2dx;
-    // 2dy - 2dx value for Bresenham
+    // 2dz value for Bresenham
+    int _2dz;
+    // 2dy - dx value for Bresenham
     int _2dy_Minus_2dx;
-    // 2dx - 2dy value for Bresenham
+    // 2dz - dx value for Bresenham
+    int _2dz_Minus_dx;
+    // 2dx - dy value for Bresenham
     int _2dx_Minus_2dy;
+    // 2dz - dy value for Bresenham
+    int _2dz_Minus_dy;
+    // 2dy - dz value for Bresenham
+    int _2dy_Minus_dz;
+    // 2dx - dz value for Bresenham
+    int _2dx_Minus_dz;
     // Slope value for Bresenham
     float m;
     // Point 1 for Bresenham
@@ -62,6 +83,8 @@ typedef struct {
     Coordinates p2;
     // Brush to paint the line with Bresenham
     Brush brush;
+    // Object's direction to animate
+    Direction objectDirection;
 } Bresenham;
 
 // Values for Hermite algorithm
@@ -76,8 +99,12 @@ typedef struct {
     Coordinates p4;
     // Vector 2 for Hermite
     Coordinates r4;
+    // T value to compute coordinates
+    float t;
     // Brush to paint the curve with Hermite
     Brush brush;
+    // Object's direction to animate
+    Direction objectDirection;
 } Hermite;
 
 class TrajectoryHandler : public GLInterface{
@@ -118,12 +145,22 @@ class TrajectoryHandler : public GLInterface{
         // Overrided display function from GLInterface
         virtual void display();
 
-        // Draw a line following the DDA algorithm
-        void ddaDrawLine();
+        // Overrided run function from GLInterface
+        virtual void run();
 
         // Draw a line following the Bresenham algorithm
         void bresenhamDrawLine();
 
         // Draw a curve following the Hermite algorithm
         void hermiteDrawCurve();
+
+        // Animate an object, this function needs to be called in the run() definition
+        void bresenhamAnimateObject(vector<Mesh> &object, Coordinates &origin);
+
+        // Animate an object with a predefined Hermite curve trajectory
+        void hermiteAnimateObject(vector<Mesh> &object, Coordinates &origin);
+
+
+
+        static void trasnlatePoint(Coordinates &point, float dx, float dy, float dz);
 };

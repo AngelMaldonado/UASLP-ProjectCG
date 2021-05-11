@@ -37,6 +37,8 @@ void TrajectoryHandler::setBresenhamValues(float fx1, float fy1, float fx2, floa
     bresenham.brush.pointSize = pointSize;
     bresenham.brush.lineStyle = lineStyle;
 
+    bresenham.objectDirection = O_TOWARDS;
+
     initBresenham();
 }
 
@@ -50,12 +52,15 @@ void TrajectoryHandler::setHermiteValues(float xP1, float yP1, float xP4, float 
         hermite.r4.x = xR4; hermite.r4.y = yR4;
 
         hermite.increment = increment;
+        hermite.t = 0.0;
 
         hermite.brush.red = red;
         hermite.brush.green = green;
         hermite.brush.blue = blue;
         hermite.brush.pointSize = pointSize;
         hermite.brush.lineStyle = lineStyle;
+
+        hermite.objectDirection = O_TOWARDS;    
     }
 
 void TrajectoryHandler::display() {
@@ -67,6 +72,9 @@ void TrajectoryHandler::display() {
         case ALG_HERMITE_DRAW_CURVE:
             hermiteDrawCurve();
     }
+}
+
+void TrajectoryHandler::run() {
 }
 
 void TrajectoryHandler::bresenhamDrawLine() {
@@ -118,7 +126,7 @@ void TrajectoryHandler::bresenhamDrawLine() {
 
 void TrajectoryHandler::hermiteDrawCurve() {
     float t;
-    float x, y;
+    float x, y, z;
     
     initDrawingTrajectory(hermite.brush);
 
@@ -129,8 +137,126 @@ void TrajectoryHandler::hermiteDrawCurve() {
                 + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.x + (pow(t, 3) - pow(t, 2))*hermite.r4.x;
             y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.y + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.y
                 + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.y + (pow(t, 3) - pow(t, 2))*hermite.r4.y;
+            z = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.z + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.z
+                + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.z + (pow(t, 3) - pow(t, 2))*hermite.r4.z;
             
-            glVertex2i(round(x), round(y));
+            glVertex3i(round(x), round(y), round(z));
         }
     glEnd();
+}
+
+void TrajectoryHandler::bresenhamAnimateObject(vector<Mesh>& object, Coordinates &origin) {
+    switch(bresenham.objectDirection)
+    {
+        case O_TOWARDS:
+            if(origin.x <= bresenham.p2.x && origin.y <= bresenham.p2.y)
+            {
+                if(bresenham.m >= 0 && bresenham.m <= 1) {
+                    if(bresenham.pk < 0)
+                    {
+                        for(int o = 0; o < (int)object.size(); o++)
+                        for(int v = 0; v < (int)object[o].getVertices().size(); v++)
+                        {
+                            object[o].setVertexCoordinates(object[o].getVertices()[v].getX()+1,
+                                                           object[o].getVertices()[v].getY(),
+                                                           object[o].getVertices()[v].getZ(), v);
+                        }
+                        origin.x++;
+                            
+                        bresenham.pk = bresenham.pk + bresenham._2dy;
+                    }
+                    else
+                    {
+                        for(int o = 0; o < (int)object.size(); o++)
+                        for(int v = 0; v < (int)object[o].getVertices().size(); v++)
+                        {
+                            object[o].setVertexCoordinates(object[o].getVertices()[v].getX()+1,
+                                                           object[o].getVertices()[v].getY()+1,
+                                                           object[o].getVertices()[v].getZ(), v);
+                        }
+                        origin.x++, origin.y++;
+
+                        bresenham.pk = bresenham.pk + bresenham._2dy_Minus_2dx;
+                    }
+                }
+                else if(bresenham.m > 1)
+                {
+                    if(bresenham.pk < 0)
+                    {
+                        for(int o = 0; o < (int)object.size(); o++)
+                        for(int v = 0; v < (int)object[o].getVertices().size(); v++)
+                        {
+                            object[o].setVertexCoordinates(object[o].getVertices()[v].getX(),
+                                                           object[o].getVertices()[v].getY()+1,
+                                                           object[o].getVertices()[v].getZ(), v);
+                        }
+                        origin.y++; //origin.z++;
+
+                        bresenham.pk = bresenham.pk + bresenham._2dx;
+                    }
+                    else
+                    {
+                        for(int o = 0; o < (int)object.size(); o++)
+                        for(int v = 0; v < (int)object[o].getVertices().size(); v++)
+                        {
+                            object[o].setVertexCoordinates(object[o].getVertices()[v].getX()+1,
+                                                           object[o].getVertices()[v].getY()+1,
+                                                           object[o].getVertices()[v].getZ(), v);
+                        }
+                        origin.x++, origin.y++; //origin.z++;
+
+                        bresenham.pk = bresenham.pk + bresenham._2dx_Minus_2dy;
+                    }
+                }
+            } else {
+                bresenham.objectDirection = O_BACKWARDS;
+                if(bresenham.m >= 0 && bresenham.m <= 1)
+                    bresenham.pk = bresenham._2dy - bresenham.dx;
+                else if(bresenham.m > 1)
+                    bresenham.pk = bresenham._2dx - bresenham.dy;
+            }
+        break;
+        case O_BACKWARDS:
+        break;
+    }
+}
+
+void TrajectoryHandler::hermiteAnimateObject(vector<Mesh> &object, Coordinates &origin) {
+    int dx = origin.x, dy = origin.y, dz = origin.z;
+    float t = hermite.t;
+    switch(hermite.objectDirection)
+    {
+        case O_TOWARDS:
+            if(t <= 1)
+            {
+                origin.x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.x + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.x
+                         + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.x + (pow(t, 3) - pow(t, 2))*hermite.r4.x;
+                origin.y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.y + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.y
+                         + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.y + (pow(t, 3) - pow(t, 2))*hermite.r4.y;
+                origin.z = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.z + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.z
+                         + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.z + (pow(t, 3) - pow(t, 2))*hermite.r4.z;
+                
+                dx = origin.x - dx;
+                dy = origin.y - dy;
+                dz = origin.z - dz;
+
+                for(int o = 0; o < (int)object.size(); o++)
+                    for(int v = 0; v < (int)object[o].getVertices().size(); v++)
+                    {
+                        object[o].setVertexCoordinates(object[o].getVertices()[v].getX()+dx,
+                                                       object[o].getVertices()[v].getY()+dy,
+                                                       object[o].getVertices()[v].getZ()+dz, v);
+                    }
+                hermite.t += hermite.increment;
+            } else hermite.objectDirection = O_BACKWARDS;
+        break;
+        case O_BACKWARDS:
+        break;
+    }
+}
+
+
+
+void TrajectoryHandler::trasnlatePoint(Coordinates &point, float dx, float dy, float dz) {
+    point.x = point.x + dx, point.y = point.y + dy, point.z = point.z + dx;
 }

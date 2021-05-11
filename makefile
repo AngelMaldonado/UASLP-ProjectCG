@@ -35,8 +35,8 @@ all:
 	clean
 
 # Make model display Test
-model_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OBJFileReader.o ModelDisplayTest.o
-	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)ModelDisplayTest.o -o $(BIN_TST)model_display_test $(CINCLUDES)
+model_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OBJFileReader.o ModelDisplayTest.o TrajectoryHandler.o
+	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)ModelDisplayTest.o $(OUT_DIR)TrajectoryHandler.o -o $(BIN_TST)model_display_test $(CINCLUDES)
 	./bin/tests/model_display_test
 
 # Make trajectories Test

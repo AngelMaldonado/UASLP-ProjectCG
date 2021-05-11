@@ -37,7 +37,7 @@ public:
     // Returns a vector of Vertex objects that describe a Face in current line at reading process
     // Requires the current mesh which contains the continuity of vertices' indexes that were added
     // Requires the last vertex index that were stored in a previous mesh (if there is more than one mesh)
-    vector<Vertex> getFaceWithLine(string currentFileLine, Mesh currentMesh, int lastVrtxIndexInPrevMesh);
+    vector<int> getFaceWithLine(string currentFileLine, Mesh currentMesh, int lastVrtxIndexInPrevMesh);
 
     // Returns a vector with the coordinates of the vertex in current line at reading process
     vector<double> getVertexCoordinatesWithLine(string currentFileLine);

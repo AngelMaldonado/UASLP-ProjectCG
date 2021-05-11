@@ -16,7 +16,7 @@ vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
             // Local vector of doubles to store the vertices read in file
             vector <double> dblVerticesRead;
             // Local vector of Vertices to store a face's vertices
-            vector <Vertex> faceVertices;
+            vector <int> faceVerticesIndices;
             // Variable that stores the index of the las Vertex that was added to a mesh
             int lastVertexIndex;
 
@@ -100,7 +100,7 @@ vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
                             // Face case
                         case 'f':
                             // Reset the faceVertices vector
-                            faceVertices.clear();
+                            faceVerticesIndices.clear();
                             if(printReading == 's')
                             {
                                 cout << "*********************************" << '\n';
@@ -109,9 +109,9 @@ vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
                             }
 
                             // Get a vector of Vertex that describes the face that is reading
-                            faceVertices = getFaceWithLine(lineContent, meshes.back(), lastVertexIndex);
+                            faceVerticesIndices = getFaceWithLine(lineContent, meshes.back(), lastVertexIndex);
                             // Create a new face in current mesh with vector faceVertices
-                            if(meshes.back().addFace(faceVertices)) {
+                            if(meshes.back().addFace(faceVerticesIndices)) {
                                 if(printReading == 's')
                                 {
                                     meshes.back().getLastFace().showsFaceFormatted();
@@ -141,10 +141,10 @@ vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
     return {};
 }
 
-vector<Vertex> OBJFileReader::getFaceWithLine(string currentFileLine, Mesh currentMesh, int lastVrtxIndexInPrevMesh) {
+vector<int> OBJFileReader::getFaceWithLine(string currentFileLine, Mesh currentMesh, int lastVrtxIndexInPrevMesh) {
     if(currentFileLine[0] == 'f') {
         // Vector that contains the vertices that conforms the face
-        vector<Vertex> verticesOfFace;
+        vector<int> verticesOfFace;
         // Index of the vertex at the vector of Vertex in currentMesh
         int vertexIndex;
         // Delete the f id from file
@@ -154,7 +154,8 @@ vector<Vertex> OBJFileReader::getFaceWithLine(string currentFileLine, Mesh curre
 
         // Read all the vertices that conforms the face
         while(ssCurrentFileLine >> vertexIndex)
-            verticesOfFace.push_back(currentMesh.getVertex((vertexIndex-1)-lastVrtxIndexInPrevMesh));
+            verticesOfFace.push_back(vertexIndex-1);
+            //verticesOfFace.push_back(currentMesh.getVertexAddress((vertexIndex-1)-lastVrtxIndexInPrevMesh));
 
         return verticesOfFace;
     }
