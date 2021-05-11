@@ -59,8 +59,9 @@ Vertex Mesh::getVertex(int vertexIndex) {
     return vertices.at(vertexIndex);
 }
 
-double *Mesh::getFaceVertex(int vertexIndex) {
+double *Mesh::getVertexAsArray(int vertexIndex) {
     double *coordinates = new double(3);
+
     coordinates[0] = vertices.at(vertexIndex).getX();
     coordinates[1] = vertices.at(vertexIndex).getY();
     coordinates[2] = vertices.at(vertexIndex).getZ();
