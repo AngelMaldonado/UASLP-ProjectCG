@@ -26,7 +26,8 @@
 // Enum with the different views for frameworks (2D and 3D)
 enum View {
     VIEW_3D,
-    VIEW_2D
+    VIEW_2D,
+    VIEW_PERSP
 };
 
 class GLInterface {
@@ -58,6 +59,14 @@ class GLInterface {
         float orthoVbottom;
         // Ortho top value in pixels (OpenGL)
         float orthoVtop;
+        // Perspective left value in pixels (OpenGL)
+        float perspVleft;
+        // Perspective right value in pixels (OpenGL)
+        float perspVright;
+        // Perspective bottom value in pixels (OpenGL)
+        float perspVbottom;
+        // Perspective top value in pixels (OpenGL)
+        float perspVtop;
         // Z near value in pixels (OpenGL)
         float near;
         // Z far value in pixels (OpenGL)
@@ -94,10 +103,15 @@ class GLInterface {
         // Set the 2D window's viewing values
         void setView2D(GLenum matrixMode,
                        float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop);
-        // Set the 3D windo's viewing values
+        // Set the 3D window's viewing values
         void setView3D(GLenum matrixMode,
                        float orthoVleft, float orthoVright, float orthoVbottom, float orthoVtop,
                        float near, float far, float rotAngle, float rotX, float rotY, float rotZ);
+
+        // Set the 3D perspective view
+        void setPerspective(GLenum matrixMode,
+                            float perspVleft, float perspVright, float perspVbottom, float perspVtop,
+                            float near, float far);
 
         // Initialize the window's view
         void initView (void);

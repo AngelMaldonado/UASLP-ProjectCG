@@ -81,6 +81,22 @@ void GLInterface::setView3D(GLenum matrixMode,
     this->rotX = rotX;
     this->rotY = rotY;
     this->rotZ = rotZ;
+
+    view = VIEW_3D;
+}
+
+void GLInterface::setPerspective(GLenum matrixMode,
+                            float perspVleft, float perspVright, float perspVbottom, float perspVtop,
+                            float near, float far) {
+    this->matrixMode = matrixMode;
+    this->perspVleft = perspVleft;
+    this->perspVright = perspVright;
+    this->perspVbottom = perspVbottom;
+    this->perspVtop = perspVtop;
+    this->near = near;
+    this->far = far;
+
+    view = VIEW_PERSP;
 }
 
 void GLInterface::initView(void) {
@@ -88,15 +104,21 @@ void GLInterface::initView(void) {
     glClearColor (0.0, 0.0, 0.0, 0.0);
 
     // Initialize viewing values
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(matrixMode);
     glLoadIdentity();
-        // Orthographic view
-        glOrtho(orthoVleft, orthoVright, orthoVbottom, orthoVtop, near, far);   
 
-    if(view == VIEW_3D)
+    switch(view)
     {
-        // Rotate the whole scene so that three faces of the cube are seen
-        glRotatef (rotAngle, rotX, rotY, rotZ);
+        case VIEW_2D:
+        break;
+        case VIEW_3D:
+            // Orthographic view
+            glOrtho(orthoVleft, orthoVright, orthoVbottom, orthoVtop, near, far); 
+        break;
+        case VIEW_PERSP:
+            // Perspective view
+            glFrustum(perspVleft, perspVright, perspVbottom, perspVtop, near, far);
+        break;
     }
 }
 

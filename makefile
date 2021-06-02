@@ -26,6 +26,7 @@ TRANS_HANDLER_CPP = $(SRC_DIR)graphics/TransformationsHandler.cpp
 # Testing files
 TST_TRAJ = test/trajectories/TrajectoriesTest.cpp
 TST_MODEL_DISPLAY = test/models/ModelDisplayTest.cpp
+TST_PERSP_DISPLAY = test/display/PerspectiveDisplayTest.cpp
 
 # Linkers
 CINCLUDES = -lGL -lGLU -lglut
@@ -34,6 +35,11 @@ CINCLUDES = -lGL -lGLU -lglut
 all:
 	$(CC) $(CFLAGS) $(SRC_FILES) -o main.exe $(CINCLUDES)
 	clean
+
+# Make perspective display Test
+persp_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OBJFileReader.o PerspectiveDisplayTest.o TrajectoryHandler.o TransformationsHandler.o
+	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)PerspectiveDisplayTest.o $(OUT_DIR)TrajectoryHandler.o $(OUT_DIR)TransformationsHandler.o -o $(BIN_TST)persp_display_test $(CINCLUDES)
+	./bin/tests/persp_display_test
 
 # Make model display Test
 model_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OBJFileReader.o ModelDisplayTest.o TrajectoryHandler.o TransformationsHandler.o
@@ -50,6 +56,9 @@ TrajectoriesTest.o: TrajectoryHandler.o GLInterface.o
 
 ModelDisplayTest.o:
 	$(CC) $(CFLAGS) $(TST_MODEL_DISPLAY) -o $(OUT_TST)ModelDisplayTest.o
+
+PerspectiveDisplayTest.o:
+	$(CC) $(CFLAGS) $(TST_PERSP_DISPLAY) -o $(OUT_TST)PerspectiveDisplayTest.o
 
 TrajectoryHandler.o: $(TRAJ_HANLDER_CPP)
 	$(CC) $(CFLAGS) $(TRAJ_HANLDER_CPP) -o $(OUT_DIR)TrajectoryHandler.o
