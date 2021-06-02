@@ -7,6 +7,17 @@ using namespace std;
 #pragma once
 #include <iostream>
 #include "containers.h"
+#include "glinterface.h"
+
+// Coordinates: X, Y and Z
+typedef struct {
+    // X coordinate
+    float x;
+    // Y coordinate
+    float y;
+    // Z coordinate
+    float z;
+} Coordinates;
 
 /**
  * >> Vertex: is a point where two or more curves, lines, or edges meet.
@@ -147,4 +158,33 @@ public:
 
     // Returns the Vertex index of the vector
     int getVertexIndex();
+};
+
+/**
+ * Object class
+ **/
+class Object : public Drawable{
+    private:
+        // Vector of meshes
+        vector<Mesh> meshes;
+        // Origin of the object
+        Coordinates origin;
+        // Boolean to make the draw method to draw or not the origin point
+        bool drawOrigin;
+    public:
+        // Default constructor
+        Object();
+        // Constructor with a predefined vector of meshes
+        Object(vector<Mesh> mesh);
+        // Getter for the vector of meshes
+        vector<Mesh> &getMeshes();
+        // Getter for the object's origin
+        Coordinates &getOrigin();
+        // Setter for the object's origin
+        void setOrigin(float x, float y, float z);
+        // Show the origin point
+        void showOrigin();
+        // Hide the origin point
+        void hideOrigin();
+        virtual void draw();
 };

@@ -1,8 +1,8 @@
 #pragma once
-#include "glinterface.h"
-#include "geometry.h"
 #include <math.h>
 #include <iostream>
+#include "glinterface.h"
+#include "geometry.h"
 
 using namespace std;
 
@@ -20,30 +20,6 @@ enum Direction {
     O_TOWARDS = 1,
     O_BACKWARDS
 };
-
-// Brush to paint the line/curve
-typedef struct {
-    // Red value for Brush
-    int red;
-    // Green value for Brush
-    int green;
-    // Blue value for Brush
-    int blue;
-    // Pixel size for the Brush
-    float pointSize; 
-    // Drawing style for the Brush
-    GLenum lineStyle;
-} Brush;
-
-// Coordinates: X, Y and Z
-typedef struct {
-    // X coordinate
-    float x;
-    // Y coordinate
-    float y;
-    // Z coordinate
-    float z;
-} Coordinates;
 
 // Values for Bresenham algorithm
 typedef struct {
@@ -107,7 +83,7 @@ typedef struct {
     Direction objectDirection;
 } Hermite;
 
-class TrajectoryHandler : public GLInterface{
+class TrajectoryHandler : public Drawable {
     private:
         // Selected algorithm/method
         Algorithm algorithm;
@@ -142,11 +118,8 @@ class TrajectoryHandler : public GLInterface{
                               float increment,
                               int red, int green, int blue, float pointSize, GLenum lineStyle);
 
-        // Overrided display function from GLInterface
-        virtual void display();
-
-        // Overrided run function from GLInterface
-        virtual void run();
+        // Overrided draw function from Drawable class
+        virtual void draw();
 
         // Draw a line following the Bresenham algorithm
         void bresenhamDrawLine();
@@ -155,10 +128,10 @@ class TrajectoryHandler : public GLInterface{
         void hermiteDrawCurve();
 
         // Animate an object, this function needs to be called in the run() definition
-        void bresenhamAnimateObject(vector<Mesh> &object, Coordinates &origin);
+        void bresenhamAnimateObject(Object &object, Coordinates &origin);
 
         // Animate an object with a predefined Hermite curve trajectory
-        void hermiteAnimateObject(vector<Mesh> &object, Coordinates &origin);
+        void hermiteAnimateObject(Object &object, Coordinates &origin);
 };
 
 class TransformationsHandler {
@@ -171,13 +144,13 @@ class TransformationsHandler {
         double rotMatrixY[4][4];
         // Rotation Matrix for Z axis
         double rotMatrixZ[4][4];
-        // Matrix composition    
+        // Matrix composition
         double matrixComposition[4][4];
     public:
         // Translate an object at T[dx, dy, dz, 1]
-        static void translateObject(vector<Mesh> &object, double dx, double dy, double dz);
+        static void translateObject(Object &object, double dx, double dy, double dz);
         // Scale an object
-        static void scaleObject(vector<Mesh> &object, double scalingValue);
+        static void scaleObject(Object &object, double scalingValue);
         // Rotate an object
-        static void rotateObject(vector<Mesh> &object, Coordinates origin, double rx, double ry, double rz);
+        static void rotateObject(Object &object, Coordinates pivot, double rx, double ry, double rz);
 };

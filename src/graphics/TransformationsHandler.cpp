@@ -1,13 +1,13 @@
 #include "../../include/transformations.h"
 
-void TransformationsHandler::translateObject(vector<Mesh> &object, double dx, double dy, double dz) {
+void TransformationsHandler::translateObject(Object &object, double dx, double dy, double dz) {
     int r, k;
     double T[4][4] = {1, 0, 0, (double)dx,
                       0, 1, 0, (double)dy,
                       0, 0, 1, (double)dz,
                       0, 0, 0, 1};
         
-    for(Mesh &mesh : object) {
+    for(Mesh &mesh : object.getMeshes()) {
         for(int point = 0; point < (int)mesh.getVertices().size(); point++) {
             Vertex vertex = mesh.getVertex(point);
             double coordinates[4] = {vertex.getCoordinates()[0], vertex.getCoordinates()[1], vertex.getCoordinates()[2], 1};
@@ -20,13 +20,13 @@ void TransformationsHandler::translateObject(vector<Mesh> &object, double dx, do
     }
 }
 
-void TransformationsHandler::scaleObject(vector<Mesh> &object, double s) {
+void TransformationsHandler::scaleObject(Object &object, double s) {
     int r, k;
     double S[4][4] = {s, 0, 0, 0,
                       0, s, 0, 0,
                       0, 0, s, 0,
                       0, 0, 0, 1};
-    for(Mesh &mesh : object) {
+    for(Mesh &mesh : object.getMeshes()) {
         for(int point = 0; point < (int)mesh.getVertices().size(); point++) {
             Vertex vertex = mesh.getVertex(point);
             double coordinates[4] = {vertex.getCoordinates()[0], vertex.getCoordinates()[1], vertex.getCoordinates()[2], 1};
@@ -39,7 +39,7 @@ void TransformationsHandler::scaleObject(vector<Mesh> &object, double s) {
     }
 }
 
-void TransformationsHandler::rotateObject(vector<Mesh> &object, Coordinates origin, double angleX, double angleY, double angleZ) {
+void TransformationsHandler::rotateObject(Object &object, Coordinates pivot, double angleX, double angleY, double angleZ) {
     double rotMatrixX[4][4], rotMatrixY[4][4], rotMatrixZ[4][4];
     int r, c;
     for(r = 0; r < 4; r++)
@@ -62,10 +62,10 @@ void TransformationsHandler::rotateObject(vector<Mesh> &object, Coordinates orig
     rotMatrixZ[1][0] = sin(angleZ * (M_PI/180));
     rotMatrixZ[1][1] = cos(angleZ * (M_PI/180));
 
-    translateObject(object, -origin.x, -origin.y, -origin.z);
+    translateObject(object, -pivot.x, -pivot.y, -pivot.z);
 
     // ROTATION X
-    for(Mesh &mesh : object) {
+    for(Mesh &mesh : object.getMeshes()) {
         for(int point = 0; point < (int)mesh.getVertices().size(); point++) {
             Vertex vertex = mesh.getVertex(point);
             double coordinates[4] = {vertex.getCoordinates()[0], vertex.getCoordinates()[1], vertex.getCoordinates()[2], 1};
@@ -78,7 +78,7 @@ void TransformationsHandler::rotateObject(vector<Mesh> &object, Coordinates orig
     }
 
     // ROTATION Y
-    for(Mesh &mesh : object) {
+    for(Mesh &mesh : object.getMeshes()) {
         for(int point = 0; point < (int)mesh.getVertices().size(); point++) {
             Vertex vertex = mesh.getVertex(point);
             double coordinates[4] = {vertex.getCoordinates()[0], vertex.getCoordinates()[1], vertex.getCoordinates()[2], 1};
@@ -91,7 +91,7 @@ void TransformationsHandler::rotateObject(vector<Mesh> &object, Coordinates orig
     }
 
     // ROTATION Z
-    for(Mesh &mesh : object) {
+    for(Mesh &mesh : object.getMeshes()) {
         for(int point = 0; point < (int)mesh.getVertices().size(); point++) {
             Vertex vertex = mesh.getVertex(point);
             double coordinates[4] = {vertex.getCoordinates()[0], vertex.getCoordinates()[1], vertex.getCoordinates()[2], 1};
@@ -103,5 +103,5 @@ void TransformationsHandler::rotateObject(vector<Mesh> &object, Coordinates orig
         }
     }
 
-    translateObject(object, origin.x, origin.y, origin.z);
+    translateObject(object, pivot.x, pivot.y, pivot.z);
 }

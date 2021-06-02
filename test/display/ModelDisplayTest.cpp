@@ -61,7 +61,7 @@ void Drawable::display() {
 
 void Drawable::run() {
     hermiteAnimateObject(object, origin);
-    TransformationsHandler::rotateObject(object, origin, 0.1, 0.1, 0);
+    //TransformationsHandler::rotateObject(object, origin, 0.1, 0.1, 0);
 }
 
 void givenModel_whenCertainViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {

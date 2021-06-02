@@ -30,6 +30,20 @@ enum View {
     VIEW_PERSP
 };
 
+// Brush to paint the line/curve
+typedef struct {
+    // Red value for Brush
+    int red;
+    // Green value for Brush
+    int green;
+    // Blue value for Brush
+    int blue;
+    // Pixel size for the Brush
+    float pointSize; 
+    // Drawing style for the Brush
+    GLenum lineStyle;
+} Brush;
+
 class GLInterface {
     protected:
         /*
@@ -93,7 +107,7 @@ class GLInterface {
         // Empty GLInterface constructor
         GLInterface();
         // Custom window values for GLInterface constructor
-        GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, char* wndName);
+        GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, const char* wndName);
 
         // Main display function of OpenGL framework
         static void displayWrapper();
@@ -125,4 +139,18 @@ class GLInterface {
 
         // Set instance to GLInterface
         static void setInstance(GLInterface* framework);
+};
+
+// This class makes every object drawable
+class Drawable {
+    protected:
+        // Brush to define the color, pointSize and lineStyle of the drawable object
+        Brush brush;
+    public:
+        // Default constructor
+        Drawable();
+        // Constructor with custom values
+        Drawable(int red, int green, int blue, float pointSize, GLenum lineStyle);
+        // Draw method, the extended class needs to define its implementation
+        virtual void draw();
 };

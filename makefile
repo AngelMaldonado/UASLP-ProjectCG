@@ -22,6 +22,7 @@ MESH_CPP = $(SRC_DIR)graphics/Mesh.cpp
 TRAJ_HANLDER_CPP = $(SRC_DIR)graphics/TrajectoryHandler.cpp
 VERTEX_CPP = $(SRC_DIR)graphics/Vertex.cpp
 TRANS_HANDLER_CPP = $(SRC_DIR)graphics/TransformationsHandler.cpp
+OBJECT_CPP = $(SRC_DIR)graphics/Object.cpp
 
 # Testing files
 TST_TRAJ = test/trajectories/TrajectoriesTest.cpp
@@ -37,8 +38,8 @@ all:
 	clean
 
 # Make perspective display Test
-persp_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OBJFileReader.o PerspectiveDisplayTest.o TrajectoryHandler.o TransformationsHandler.o
-	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)PerspectiveDisplayTest.o $(OUT_DIR)TrajectoryHandler.o $(OUT_DIR)TransformationsHandler.o -o $(BIN_TST)persp_display_test $(CINCLUDES)
+persp_display_test:${OUT_DIR} ${BIN_DIR} TrajectoryHandler.o TransformationsHandler.o GLInterface.o Face.o Mesh.o Vertex.o Object.o OBJFileReader.o PerspectiveDisplayTest.o
+	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Object.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)PerspectiveDisplayTest.o $(OUT_DIR)TrajectoryHandler.o $(OUT_DIR)TransformationsHandler.o -o $(BIN_TST)persp_display_test $(CINCLUDES)
 	./bin/tests/persp_display_test
 
 # Make model display Test
@@ -68,6 +69,9 @@ TransformationsHandler.o: $(TRANS_HANDLER_CPP)
 
 GLInterface.o: $(GL_INTERFACE_CPP)
 	$(CC) $(CFLAGS) $(GL_INTERFACE_CPP) -o $(OUT_DIR)GLInterface.o
+
+Object.o: $(OBJECT_CPP)
+	$(CC) $(CFLAGS) $(OBJECT_CPP) -o $(OUT_DIR)Object.o
 
 Face.o: $(FACE_CPP)
 	$(CC) $(CFLAGS) $(FACE_CPP) -o $(OUT_DIR)Face.o

@@ -5,79 +5,39 @@
 #include "../../include/glinterface.h"
 #include "../../include/transformations.h"
 
-class Drawable : public TrajectoryHandler {
+class SimulationFramework : public GLInterface {
     public:
-        vector<Mesh> object;
-        Coordinates origin;
-
+        Object object;
+        TrajectoryHandler trajectoryHandler;
         virtual void display();
         virtual void run();
-        
-        Drawable() {
-            origin.x = 0;
-            origin.y = 0;
-            origin.z = 0;
-        }
-
-        void setOrigin(float x, float y, float z) {
-            origin.x = x, origin.y = y, origin.z = z;
-            TransformationsHandler::translateObject(object, x, y, z);
-        }
-
-        void drawObject() {
-            // Local array of primitive coorinates of vertices (x, y, z)
-            double* vertices;
-
-            // Define color
-            glColor3f (1.0, 1.0, 1.0);
-
-            // For each stored mesh in vector<Mesh>
-            for(Mesh mesh : object)
-            {
-                // For each Face that mesh has
-                for (Face face : mesh.getFaces()) 
-                {
-                    glBegin(GL_LINE_LOOP);
-                    for(int vertex : face.getVertices())
-                    {
-                        vertices = mesh.getVertex(vertex).getCoordinates();
-                        glVertex3f(vertices[0], vertices[1], vertices[2]);
-                    }
-                    glEnd();
-                }
-            }
-        }
+        SimulationFramework(){};
 };
 
-void Drawable::display() {
-    drawObject();
-    //hermiteDrawCurve();
-
-    glColor3f(0, 1, 0);
-    glBegin(GL_POINTS);
-        glVertex3i(round(origin.x), round(origin.y), round(origin.z));
-    glEnd();
+void SimulationFramework::display() {
+    object.draw();
+    trajectoryHandler.draw();
 }
 
-void Drawable::run() {
-    //hermiteAnimateObject(object, origin);
-    TransformationsHandler::rotateObject(object, origin, 0.1, 0, 0);
+void SimulationFramework::run() {
+    trajectoryHandler.hermiteAnimateObject(object, object.getOrigin());
+    TransformationsHandler::rotateObject(object, object.getOrigin(), 0.1, 0, 0);
 }
 
 void givenModel_whenPerspectiveViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {
     // Given
     OBJFileReader fileReader;
-    Drawable *drawableObject = new Drawable();
-    GLInterface *glInterface = new GLInterface();
-    drawableObject->object= fileReader.readFile("objs/test/cube.obj", 'n');
-    //TransformationsHandler::scaleObject(drawableObject->object, 1.5);
-    drawableObject->setOrigin(1, 0, -5);
+    SimulationFramework *simFramework = new SimulationFramework();
+    GLInterface *glInterface = new GLInterface(1024, 576, 0, 0, "Perspective Display - Test");
+    simFramework->object = Object(fileReader.readFile("objs/test/cube.obj", 'n'));
+    TransformationsHandler::scaleObject(simFramework->object, 5);
+    simFramework->object.setOrigin(-5, 0, -20);
 
     // When
-    drawableObject->setHermiteValues(100, 100, 0, 400, 100, 0, 100, 2000, 0, 400, -600, 0, 0.001, 1, 1, 1, 3, GL_POINTS);
-    drawableObject->time = 10;
-    glInterface->setInstance(drawableObject);
-    glInterface->setPerspective(GL_PROJECTION, -2, 2, -2, 2, 1, 10);
+    simFramework->trajectoryHandler.setHermiteValues(-150, -30, -200, 150, -30, -200, -150, 200, -200, 150, -600, -200, 0.001, 1, 1, 1, 1, GL_POINTS);
+    simFramework->time = 10;
+    glInterface->setInstance(simFramework);
+    glInterface->setPerspective(GL_PROJECTION, -10, 10, -10, 10, 10, 600);
 
     // Then
     glInterface->startFramework(argc, argv);

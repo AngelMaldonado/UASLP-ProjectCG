@@ -18,12 +18,12 @@ GLInterface::GLInterface() {
     time = 20;
 }
 
-GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, char* wndName) {
+GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, const char* wndName) {
     this->wndWith = wndWith;
     this->wndHeight = wndHeight;
     this->wndPosX = wndPosX;
     this->wndPosY = wndPosY;
-    this->wndName = wndName;
+    this->wndName = (char *)wndName;
 }
 
 void GLInterface::displayWrapper() {
@@ -132,3 +132,21 @@ void GLInterface::run() {}
 
 // Initialize the instance of GLInterface to a null reference
 GLInterface* GLInterface::instance = NULL;
+
+Drawable::Drawable() {
+    brush.red = 1;
+    brush.green = 1;
+    brush.blue = 1;
+    brush.pointSize = 1.0;
+    brush.lineStyle = GL_POINTS;
+}
+
+Drawable::Drawable(int red, int green, int blue, float pointSize, GLenum lineStyle) {
+    brush.red = red;
+    brush.green = green;
+    brush.blue = blue;
+    brush.pointSize = pointSize;
+    brush.lineStyle = lineStyle;
+}
+
+void Drawable::draw(){}
