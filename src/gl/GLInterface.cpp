@@ -1,6 +1,10 @@
 #include "../../include/glinterface.h"
 #include <iostream>
 
+void menu(int value) {
+
+}
+
 GLInterface::GLInterface() {
     // Default framework viewing and window values
     wndWith = wndHeight = DEF_WINDOW_SIZE;
@@ -46,6 +50,11 @@ void GLInterface::startFramework(int argc, char *argv[]) {
     glutInitWindowSize(wndWith, wndHeight);
     glutCreateWindow(wndName);
     initView();
+
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Altura", 1);
+    glutAddMenuEntry("Velocidad", 2);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     // Function callbacks
     glutDisplayFunc(displayWrapper);

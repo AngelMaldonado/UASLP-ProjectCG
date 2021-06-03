@@ -24,6 +24,10 @@ void SimulationFramework::run() {
     TransformationsHandler::rotateObject(object, object.getOrigin(), 0.1, 0, 0);
 }
 
+void Menu(int value) {
+
+}
+
 void givenModel_whenPerspectiveViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {
     // Given
     OBJFileReader fileReader;
