@@ -19,6 +19,12 @@ typedef struct {
     float z;
 } Coordinates;
 
+// Structure that defines a vector
+typedef struct {
+    Coordinates N;
+    Coordinates origin;
+} Vector;
+
 /**
  * >> Vertex: is a point where two or more curves, lines, or edges meet.
  *
@@ -86,10 +92,14 @@ public:
 class Face {
 private:
     // Vector of Vertex objects
-    vector <int> vertices;
+    vector <int> verticesIndices;
+    // Vector of the actual vertices
+    vector <Vertex> vertices;
+    // Normal vector of the face
+    Vertex normal;
 public:
     // Constructor for the Face with a vector of Vertices
-    Face(vector <int> vertices);
+    Face(vector <int> verticesIndices, vector <Vertex> vertices);
 
     // Shows the stored Face with simple format
     void showsFaceFormatted();
@@ -116,7 +126,6 @@ private:
     vector <Face> faces;
     int vertexIndex;
     vector <Vertex> vertices;
-
 public:
     // If there is more than one Mesh, last index of past Mesh is required
     Mesh(string name, int lastIndex);

@@ -24,11 +24,20 @@ bool Mesh::addVertex(vector<double> coordinates) {
     return false;
 }
 
-bool Mesh::addFace(vector<int> vertices) {
+bool Mesh::addFace(vector<int> verticesIndices) {
+    vector<Vertex> faceVertices;
+    for(int vertexIndex : verticesIndices) {
+        for(Vertex vertex : vertices) {
+            if(vertex.getIndex() == vertexIndex) {
+                faceVertices.push_back(vertex);
+                break;
+            }
+        }
+    }
     // Validate the amount of vertices to make a face
-    if (vertices.size() >= 3) {
+    if (verticesIndices.size() >= 3) {
         // Store the face in the list of Face's objects
-        faces.push_back(Face(vertices));
+        faces.push_back(Face(verticesIndices, faceVertices));
         return true;
     } else {
         return false;

@@ -28,6 +28,7 @@ OBJECT_CPP = $(SRC_DIR)graphics/Object.cpp
 TST_TRAJ = test/trajectories/TrajectoriesTest.cpp
 TST_MODEL_DISPLAY = test/models/ModelDisplayTest.cpp
 TST_PERSP_DISPLAY = test/display/PerspectiveDisplayTest.cpp
+TST_NORMAL_VECTORS = test/display/NormalVectorsTest.cpp
 
 # Linkers
 CINCLUDES = -lGL -lGLU -lglut
@@ -47,6 +48,11 @@ model_display_test:${OUT_DIR} ${BIN_DIR} GLInterface.o Face.o Mesh.o Vertex.o OB
 	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)ModelDisplayTest.o $(OUT_DIR)TrajectoryHandler.o $(OUT_DIR)TransformationsHandler.o -o $(BIN_TST)model_display_test $(CINCLUDES)
 	./bin/tests/model_display_test
 
+# Make normal vectors Test
+normal_vectors_test:${OUT_DIR} ${BIN_DIR} TrajectoryHandler.o TransformationsHandler.o GLInterface.o Face.o Mesh.o Vertex.o Object.o OBJFileReader.o NormalVectorsTest.o
+	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)Object.o $(OUT_DIR)Face.o $(OUT_DIR)Mesh.o $(OUT_DIR)Vertex.o $(OUT_DIR)OBJFileReader.o $(OUT_TST)NormalVectorsTest.o $(OUT_DIR)TrajectoryHandler.o $(OUT_DIR)TransformationsHandler.o -o $(BIN_TST)persp_display_test $(CINCLUDES)
+	./bin/tests/persp_display_test
+
 # Make trajectories Test
 traj_tests:${OUT_DIR} ${BIN_DIR} GLInterface.o TrajectoryHandler.o TrajectoriesTest.o
 	$(CC) $(OUT_DIR)GLInterface.o $(OUT_DIR)TrajectoryHandler.o $(OUT_TST)TrajectoriesTest.o -o $(BIN_TST)traj_tests $(CINCLUDES)
@@ -60,6 +66,9 @@ ModelDisplayTest.o:
 
 PerspectiveDisplayTest.o:
 	$(CC) $(CFLAGS) $(TST_PERSP_DISPLAY) -o $(OUT_TST)PerspectiveDisplayTest.o
+
+NormalVectorsTest.o:
+	$(CC) $(CFLAGS) $(TST_NORMAL_VECTORS) -o $(OUT_TST)NormalVectorsTest.o
 
 TrajectoryHandler.o: $(TRAJ_HANLDER_CPP)
 	$(CC) $(CFLAGS) $(TRAJ_HANLDER_CPP) -o $(OUT_DIR)TrajectoryHandler.o
