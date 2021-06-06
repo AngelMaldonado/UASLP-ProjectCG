@@ -41,7 +41,7 @@ double Vertex::getY() {
 
 
 double Vertex::getZ() {
-    return y;
+    return z;
 }
 
 void Vertex::setX(double x) {

@@ -114,7 +114,7 @@ vector<Mesh> OBJFileReader::readFile(string fileName, char printReading) {
                             if(meshes.back().addFace(faceVerticesIndices)) {
                                 if(printReading == 's')
                                 {
-                                    meshes.back().getLastFace().showsFaceFormatted();
+                                    meshes.back().getLastFace().showFaceFormatted();
                                     cout << "--- Successfully stored in mesh " << meshes.back().getMeshName();
                                     cout << "---" << "\n\n";
                                 }

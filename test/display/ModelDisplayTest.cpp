@@ -38,7 +38,7 @@ class Drawable : public TrajectoryHandler {
                 for (Face face : mesh.getFaces()) 
                 {
                     glBegin(GL_LINE_LOOP);
-                    for(int vertex : face.getVertices())
+                    for(int vertex : face.getVerticesIndices())
                     {
                         vertices = mesh.getVertex(vertex).getCoordinates();
                         glVertex3f(vertices[0], vertices[1], vertices[2]);

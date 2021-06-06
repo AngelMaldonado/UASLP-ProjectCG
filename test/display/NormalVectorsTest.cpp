@@ -27,8 +27,11 @@ void givenModel_whenPerspectiveViewAndCertainDisplayFunction_thenModelDisplays(i
     SimulationFramework *simFramework = new SimulationFramework();
     GLInterface *glInterface = new GLInterface(1024, 576, 0, 0, "Normal vectors - Test");
     simFramework->object = Object(fileReader.readFile("objs/test/cube.obj", 'n'));
+    simFramework->object.getMeshes().back().getVertices().back().showCoordinatesFormatted();
     TransformationsHandler::scaleObject(simFramework->object, 5);
     simFramework->object.setOrigin(0, 0, -20);
+    simFramework->object.getMeshes().back().getVertices().back().showCoordinatesFormatted();
+    simFramework->object.getMeshes().back().getLastFace().showFaceFormatted();
 
     // When
     simFramework->time = 10;

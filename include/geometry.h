@@ -6,6 +6,7 @@ using namespace std;
 #endif
 #pragma once
 #include <iostream>
+#include <memory>
 #include "containers.h"
 #include "glinterface.h"
 
@@ -99,18 +100,17 @@ private:
     Vertex normal;
 public:
     // Constructor for the Face with a vector of Vertices
-    Face(vector <int> verticesIndices, vector <Vertex> vertices);
+    Face(vector<int> verticesIndices, vector<Vertex> faceVertices);
 
     // Shows the stored Face with simple format
-    void showsFaceFormatted();
+    void showFaceFormatted();
 
     // Shows the Vertices that the Faces are made of
     void showFace();
 
     // Returns the vector of the vertices indices
-    vector<int> getVertices();
+    vector<int> getVerticesIndices();
 };
-
 
 /**
  * >> Mesh: a polygon mesh is a collection of vertices, edges and faces that defines the shape of a
