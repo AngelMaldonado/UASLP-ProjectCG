@@ -57,6 +57,10 @@ void Object::draw() {
                 glVertex3f(vertices[0], vertices[1], vertices[2]);
             }
             glEnd();
+            
+            glBegin(GL_POINTS);
+                glVertex3f(face.getNormalVector().getX(), face.getNormalVector().getY(), face.getNormalVector().getZ());
+            glEnd();
         }
     }
 

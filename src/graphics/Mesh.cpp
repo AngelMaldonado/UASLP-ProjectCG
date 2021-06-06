@@ -51,6 +51,21 @@ vector<Face> Mesh::getFaces() {
     return faces;
 }
 
+void Mesh::updateFaceVertices() {
+    for(Face &face : faces) {
+        for(Vertex &faceVertex : face.getVertices())
+            for(Vertex meshVertex : vertices)
+                if(meshVertex.getIndex() == faceVertex.getIndex()) {
+                    faceVertex.setX(meshVertex.getX());
+                    faceVertex.setY(meshVertex.getY());
+                    faceVertex.setZ(meshVertex.getZ());
+                    break;
+                }
+        face.computeNormalVector();
+    }
+    
+}
+
 Face Mesh::getLastFace() {
     return faces.back();
 }

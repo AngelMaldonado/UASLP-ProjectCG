@@ -17,6 +17,7 @@ void TransformationsHandler::translateObject(Object &object, double dx, double d
                     newCoordinates[r] += T[r][k] * coordinates[k];
             mesh.setVertexCoordinates(newCoordinates[0], newCoordinates[1], newCoordinates[2], point);
         }
+        mesh.updateFaceVertices();
     }
 }
 
@@ -36,6 +37,7 @@ void TransformationsHandler::scaleObject(Object &object, double s) {
                     newCoordinates[r] += S[r][k] * coordinates[k];
             mesh.setVertexCoordinates(newCoordinates[0], newCoordinates[1], newCoordinates[2], point);
         }
+        mesh.updateFaceVertices();
     }
 }
 
@@ -104,4 +106,6 @@ void TransformationsHandler::rotateObject(Object &object, Coordinates pivot, dou
     }
 
     translateObject(object, pivot.x, pivot.y, pivot.z);
+    for(Mesh &mesh : object.getMeshes())
+        mesh.updateFaceVertices();
 }

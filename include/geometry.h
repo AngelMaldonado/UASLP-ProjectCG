@@ -110,6 +110,15 @@ public:
 
     // Returns the vector of the vertices indices
     vector<int> getVerticesIndices();
+
+    // Returns the vertices of the face
+    vector<Vertex> &getVertices();
+
+    // Compute the normal vector of the face with the current face vertices
+    void computeNormalVector();
+
+    // Getter for the normal vector
+    Vertex getNormalVector();
 };
 
 /**
@@ -149,6 +158,9 @@ public:
 
     // Returns the vector of Vertex that compose the Mesh
     vector<Vertex> &getVertices();
+
+    // Update the vertices of the faces with the current values of the Mesh
+    void updateFaceVertices();
 
     // Returns the last Vertex added to the Mesh
     Vertex getLastVertex();
