@@ -7,18 +7,18 @@
 
 class SimulationFramework : public GLInterface {
     public:
-        Object object;
+        Object ship;
         virtual void display();
         virtual void run();
         SimulationFramework(){};
 };
 
 void SimulationFramework::display() {
-    object.draw();
+    ship.draw();
 }
 
 void SimulationFramework::run() {
-    TransformationsHandler::rotateObject(object, object.getOrigin(), 0.1, 0, 0);
+    TransformationsHandler::rotateObject(ship, ship.getOrigin(), 0.1, 0, 0);
 }
 
 void givenModel_whenPerspectiveViewAndCertainDisplayFunction_thenModelDisplays(int argc, char* argv[]) {
@@ -26,9 +26,9 @@ void givenModel_whenPerspectiveViewAndCertainDisplayFunction_thenModelDisplays(i
     OBJFileReader fileReader;
     SimulationFramework *simFramework = new SimulationFramework();
     GLInterface *glInterface = new GLInterface(1024, 576, 0, 0, "Normal vectors - Test");
-    simFramework->object = Object(fileReader.readFile("objs/test/cube.obj", 'n'));
-    TransformationsHandler::scaleObject(simFramework->object, 5);
-    simFramework->object.setOrigin(0, 0, -50);
+    simFramework->ship = Object(fileReader.readFile("objs/test/cube.obj", 'n'));
+    TransformationsHandler::scaleObject(simFramework->ship, 5);
+    simFramework->ship.setOrigin(0, 0, -50);
 
     // When
     simFramework->time = 5;

@@ -1,13 +1,10 @@
 #include "../../include/glinterface.h"
 #include <iostream>
 
-void menu(int value) {
-
-}
-
 GLInterface::GLInterface() {
     // Default framework viewing and window values
-    wndWith = wndHeight = DEF_WINDOW_SIZE;
+    wndWith = DEF_WINDOW_WIDTH;
+    wndHeight = DEF_WINDOW_HEIGHT;
     wndPosX = wndPosY = DEF_WINDOW_POSXY;
     wndName = (char*)DEF_WINDOW_NAME;
     matrixMode = GL_MODELVIEW;
@@ -16,6 +13,11 @@ GLInterface::GLInterface() {
     near = 0; far = 1;
     rotAngle = 0;
     rotX = rotY = rotZ = 0;
+    transX = transY = transZ = 0;
+    prpX = prpY = 0;
+    prpZ = 1;
+
+    backgroundR = backgroundG = backgroundB = 1;
 
     view = VIEW_3D;
 
@@ -28,6 +30,7 @@ GLInterface::GLInterface(int wndWith, int wndHeight, int wndPosX, int wndPosY, c
     this->wndPosX = wndPosX;
     this->wndPosY = wndPosY;
     this->wndName = (char *)wndName;
+    prpX = prpY = prpZ = 0;
 }
 
 void GLInterface::displayWrapper() {
@@ -42,6 +45,10 @@ void GLInterface::runWrapper(int timerValue) {
     glutTimerFunc(timerValue, runWrapper, timerValue);
 }
 
+void GLInterface::keyboardWrapper(unsigned char key, int x, int y) {
+    instance->keyboard(key, x, y);
+}
+
 void GLInterface::startFramework(int argc, char *argv[]) {
     // Initialize GLUT
     glutInit(&argc, argv);
@@ -51,16 +58,13 @@ void GLInterface::startFramework(int argc, char *argv[]) {
     glutCreateWindow(wndName);
     initView();
 
-    glutCreateMenu(menu);
-    glutAddMenuEntry("Altura", 1);
-    glutAddMenuEntry("Velocidad", 2);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-
     // Function callbacks
     glutDisplayFunc(displayWrapper);
 
     // Start the main GLUT loop/thread
     glutTimerFunc(instance->time, runWrapper, instance->time);
+
+    glutKeyboardFunc(keyboardWrapper);
 
     glutMainLoop();
 }
@@ -108,6 +112,19 @@ void GLInterface::setPerspective(GLenum matrixMode,
     view = VIEW_PERSP;
 }
 
+void GLInterface::setBackgroundColor(float red, float green, float blue) {
+    backgroundR = red;
+    backgroundG = green;
+    backgroundB = blue;
+    glClearColor(backgroundR, backgroundG, backgroundB, 0);
+}
+
+void GLInterface::setTranslationValues(float transX, float tranxY, float transZ) {
+    this->transX = transX;
+    this->transY = transY;
+    this->transZ = transZ;
+}
+
 void GLInterface::initView(void) {
     // Select clearing (background) color
     glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -129,15 +146,34 @@ void GLInterface::initView(void) {
             glFrustum(perspVleft, perspVright, perspVbottom, perspVtop, near, far);
         break;
     }
+
+    // Translate the whole scene to the translation values
+    glTranslatef(transX, transY, transZ);
 }
 
 void GLInterface::setInstance(GLInterface* framework) {
     instance = framework;
 }
 
+float *GLInterface::getPRP() {
+    float *prp = new float[3];
+    prp[0] = prpX;
+    prp[1] = prpY;
+    prp[2] = prpZ;
+    return prp;
+}
+
+void GLInterface::setPRP(float x, float y, float z) {
+    this->prpX = x;
+    this->prpY = y;
+    this->prpZ = z;
+}
+
 void GLInterface::display() {}
 
 void GLInterface::run() {}
+
+void GLInterface::keyboard(unsigned char key, int x, int y) {}
 
 // Initialize the instance of GLInterface to a null reference
 GLInterface* GLInterface::instance = NULL;
@@ -151,6 +187,14 @@ Drawable::Drawable() {
 }
 
 Drawable::Drawable(int red, int green, int blue, float pointSize, GLenum lineStyle) {
+    brush.red = red;
+    brush.green = green;
+    brush.blue = blue;
+    brush.pointSize = pointSize;
+    brush.lineStyle = lineStyle;
+}
+
+void Drawable::setBrush(int red, int green, int blue, float pointSize, GLenum lineStyle) {
     brush.red = red;
     brush.green = green;
     brush.blue = blue;

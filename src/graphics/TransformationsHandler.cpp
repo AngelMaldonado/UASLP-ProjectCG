@@ -100,7 +100,7 @@ void TransformationsHandler::rotateObject(Object &object, Coordinates pivot, dou
             double newCoordinates[4] = {0, 0, 0, 1};
             for(r = 0; r < 4; r++)
                 for(c = 0; c < 4; c++)
-                    newCoordinates[r] += rotMatrixY[r][c] * coordinates[c];
+                    newCoordinates[r] += rotMatrixZ[r][c] * coordinates[c];
             mesh.setVertexCoordinates(newCoordinates[0], newCoordinates[1], newCoordinates[2], point);
         }
     }

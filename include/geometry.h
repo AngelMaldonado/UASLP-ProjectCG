@@ -90,7 +90,7 @@ public:
  * Face class: contains a vector of Vertex objects which describes each vertex of the
  * face, then the position of the face in space.
  **/
-class Face {
+class Face : public Drawable{
 private:
     // Vector of Vertex objects
     vector <int> verticesIndices;
@@ -98,7 +98,13 @@ private:
     vector <Vertex> vertices;
     // Normal vector of the face
     Vertex normal;
+    // Brush to draw de face
+    Brush brush;
 public:
+    // Default constructor
+    Face();
+    // Constructor for a drawable face
+    Face(int red, int green, int blue, float pointSize, GLenum lineStyle, vector<Vertex> faceVertices);
     // Constructor for the Face with a vector of Vertices
     Face(vector<int> verticesIndices, vector<Vertex> faceVertices);
 
@@ -119,6 +125,11 @@ public:
 
     // Getter for the normal vector
     Vertex getNormalVector();
+
+    // Specifies if the face is visible based on a PRP value
+    bool visible(Coordinates PRP);
+
+    virtual void draw();
 };
 
 /**

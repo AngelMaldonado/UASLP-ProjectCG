@@ -62,6 +62,12 @@ class GLInterface {
         int wndPosY;
         // Window's name
         char* wndName;
+        // Background red value
+        float backgroundR;
+        // Background green value
+        float backgroundG;
+        // Background blue value
+        float backgroundB;
 
         // Viewing matrix mode (OpenGL)
         GLenum matrixMode;
@@ -93,10 +99,19 @@ class GLInterface {
         float rotY;
         // Percentage of the rotAngle in Z
         float rotZ;
+        // Scene translation value for x
+        float transX;
+        // Scene translation value for y
+        float transY;
+        // Scene translation value for z
+        float transZ;
 
-        /************************/
-        float fov;
-        float aspect;
+        // PRP x value
+        float prpX;
+        // PRP y value
+        float prpY;
+        // PRP z value
+        float prpZ;
 
         // Variable to set the 3D or 2D view of the framework instance
         View view;
@@ -113,6 +128,8 @@ class GLInterface {
         static void displayWrapper();
         // Instance wrapper for the glutIdleFunc
         static void runWrapper(int timerValue);
+        // Keyboard method wrapper
+        static void keyboardWrapper(unsigned char key, int x, int y);
 
         // Set the 2D window's viewing values
         void setView2D(GLenum matrixMode,
@@ -127,6 +144,12 @@ class GLInterface {
                             float perspVleft, float perspVright, float perspVbottom, float perspVtop,
                             float near, float far);
 
+        // Set the background color
+        void setBackgroundColor(float red, float green, float blue);
+
+        // Set the translation values
+        void setTranslationValues(float transX, float tranxY, float transZ);
+
         // Initialize the window's view
         void initView (void);
         // Starts the main framework
@@ -136,13 +159,20 @@ class GLInterface {
         virtual void run();
         // Display function
         virtual void display(void);
+        // Keyboard method
+        virtual void keyboard(unsigned char key, int x, int y);
 
         // Set instance to GLInterface
         static void setInstance(GLInterface* framework);
+
+        // Get an array with the prp coordinates
+        float *getPRP();
+        // Setter for the prp coordinates
+        void setPRP(float x, float y, float z);
 };
 
 // This class makes every object drawable
-class Drawable {
+class Drawable : public GLInterface{
     protected:
         // Brush to define the color, pointSize and lineStyle of the drawable object
         Brush brush;
@@ -153,4 +183,6 @@ class Drawable {
         Drawable(int red, int green, int blue, float pointSize, GLenum lineStyle);
         // Draw method, the extended class needs to define its implementation
         virtual void draw();
+        // Sets a custom brush
+        void setBrush(int red, int green, int blue, float pointSize, GLenum lineStyle);
 };

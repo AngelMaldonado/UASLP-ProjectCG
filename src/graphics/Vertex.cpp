@@ -6,6 +6,7 @@
 Vertex::Vertex() {}
 
 Vertex::Vertex(double x, double y, double z) {
+    index = -1;
     this->x = x;
     this->y = y;
     this->z = z;

@@ -219,26 +219,22 @@ void TrajectoryHandler::bresenhamAnimateObject(Object &object, Coordinates &orig
 }
 
 void TrajectoryHandler::hermiteAnimateObject(Object &object, Coordinates &origin) {
-    int dx = origin.x, dy = origin.y, dz = origin.z;
+    int x, y, z;
     float t = hermite.t;
     switch(hermite.objectDirection)
     {
         case O_TOWARDS:
             if(t <= 1)
             {
-                origin.x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.x + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.x
+                x = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.x + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.x
                          + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.x + (pow(t, 3) - pow(t, 2))*hermite.r4.x;
-                origin.y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.y + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.y
+                y = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.y + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.y
                          + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.y + (pow(t, 3) - pow(t, 2))*hermite.r4.y;
-                origin.z = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.z + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.z
+                z = (2*pow(t, 3) - 3*pow(t, 2) + 1)*hermite.p1.z + (-2*pow(t, 3) + 3*pow(t, 2))*hermite.p4.z
                          + (pow(t, 3) - 2*pow(t, 2) + t)*hermite.r1.z + (pow(t, 3) - pow(t, 2))*hermite.r4.z;
                 
-                dx = origin.x - dx;
-                dy = origin.y - dy;
-                dz = origin.z - dz;
 
-                TransformationsHandler::translateObject(object, dx, dy, dz);
-                cout << "dx: " << dx << " dy: " << dy << " dz: " << dz << endl;
+                object.setOrigin(x, y, z);
                 
                 hermite.t += hermite.increment;
             } else hermite.objectDirection = O_BACKWARDS;

@@ -23,10 +23,10 @@ Coordinates &Object::getOrigin() {
 }
 
 void Object::setOrigin(float x, float y, float z) {
+    TransformationsHandler::translateObject(*this, x - origin.x, y - origin.y, z - origin.z);
     origin.x = x;
     origin.y = y;
     origin.z = z;
-    TransformationsHandler::translateObject(*this, x, y, z);
 }
 
 void Object::showOrigin() {
@@ -41,8 +41,14 @@ void Object::draw() {
     // Local array of primitive coorinates of vertices (x, y, z)
     double* vertices;
 
-    // Define color
-    glColor3f (brush.red, brush.green, brush.blue);
+    // Get the prp value and store it in a Coordinate structure
+    Coordinates prp;
+    prp.x = getPRP()[0];
+    prp.y = getPRP()[1];
+    prp.z = getPRP()[2];
+
+    // Define color for mesh
+    glColor3ub (brush.red, brush.green, brush.blue);
 
     // For each stored mesh in vector<Mesh>
     for(Mesh mesh : meshes)
@@ -50,17 +56,15 @@ void Object::draw() {
         // For each Face that mesh has
         for (Face face : mesh.getFaces()) 
         {
-            glBegin(brush.lineStyle);
-            for(int vertex : face.getVerticesIndices())
-            {
-                vertices = mesh.getVertex(vertex).getCoordinates();
-                glVertex3f(vertices[0], vertices[1], vertices[2]);
+            if(face.visible(prp)) {
+                glBegin(brush.lineStyle);
+                for(int vertex : face.getVerticesIndices())
+                {
+                    vertices = mesh.getVertex(vertex).getCoordinates();
+                    glVertex3f(vertices[0], vertices[1], vertices[2]);
+                }
+                glEnd();
             }
-            glEnd();
-            
-            glBegin(GL_POINTS);
-                glVertex3f(face.getNormalVector().getX(), face.getNormalVector().getY(), face.getNormalVector().getZ());
-            glEnd();
         }
     }
 
