@@ -126,6 +126,9 @@ public:
     // Getter for the normal vector
     Vertex getNormalVector();
 
+    // Getter for the normal as unitary vector
+    Vertex getNormalVectorAsUnitary();
+
     // Specifies if the face is visible based on a PRP value
     bool visible(Coordinates PRP);
 

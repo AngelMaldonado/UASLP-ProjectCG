@@ -7,6 +7,7 @@ using namespace std;
 
 #endif
 #include "../../include/geometry.h"
+#include <math.h>
 
 Face::Face() {}
 
@@ -63,6 +64,16 @@ void Face::computeNormalVector() {
 
 Vertex Face::getNormalVector() {
     return normal;
+}
+
+Vertex Face::getNormalVectorAsUnitary() {
+    float m = sqrt(normal.getX() * normal.getX() + normal.getY() * normal.getY() + normal.getZ() * normal.getZ());
+    Vertex normalUnitary;
+    normalUnitary.setX(normal.getX() / m);
+    normalUnitary.setY(normal.getY() / m);
+    normalUnitary.setZ(normal.getZ() / m);
+    
+    return normalUnitary;
 }
 
 bool Face::visible(Coordinates PRP) {

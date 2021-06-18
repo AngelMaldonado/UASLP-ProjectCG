@@ -17,6 +17,23 @@ GLInterface::GLInterface() {
     prpX = prpY = 0;
     prpZ = 1;
 
+    Ka = 0.8;
+    Ia.R = 0.2;
+    Ia.G = 0.1;
+    Ia.B = 0;
+    Kd = 0.9;
+    Id.R = 1;
+    Id.G = 0;
+    Id.B = 0;
+    lightX = 0.9;
+    lightY = 0.44;
+    lightZ = 0;
+    Ks = 1;
+    Is.R = 1;
+    Is.G = 1;
+    Is.B = 1;
+    n = 3;
+
     backgroundR = backgroundG = backgroundB = 1;
 
     view = VIEW_3D;
@@ -123,6 +140,20 @@ void GLInterface::setTranslationValues(float transX, float tranxY, float transZ)
     this->transX = transX;
     this->transY = transY;
     this->transZ = transZ;
+}
+
+void GLInterface::setIluminationValues(float Ka, float Iar, float Iag, float Iab, float Kd, float Idr, float Idg, float Idb, float lightX, float lightY, float lightZ) {
+    this->Ka = Ka;
+    Ia.R = Iar;
+    Ia.G = Iag;
+    Ia.B = Iab;
+    this->Kd = Kd;
+    Id.R = Idr;
+    Id.G = Idg;
+    Id.B = Idb;
+    this->lightX = lightX;
+    this->lightY = lightY;
+    this->lightZ = lightZ;
 }
 
 void GLInterface::initView(void) {

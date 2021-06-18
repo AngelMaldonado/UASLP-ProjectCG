@@ -44,6 +44,13 @@ typedef struct {
     GLenum lineStyle;
 } Brush;
 
+// Structure for the instensity of the light in RGB
+typedef struct {
+    float R;
+    float G;
+    float B;
+} IRGB;
+
 class GLInterface {
     protected:
         /*
@@ -116,6 +123,27 @@ class GLInterface {
         // Variable to set the 3D or 2D view of the framework instance
         View view;
     public:
+        // Ambient K value
+        float Ka;
+        // Intensity of ambient light
+        IRGB Ia;
+        // Difuse K value
+        float Kd;
+        // Difuse of light
+        IRGB Id;
+        // Position of light source in X
+        float lightX;
+        // Position of light source in y
+        float lightY;
+        // Position of light source in z
+        float lightZ;
+        // Specular K value
+        float Ks;
+        // Specular intensity
+        IRGB Is;
+        // n value for specular
+        int n;
+
         // Time variable for the timer function of OpenGL
         unsigned int time;
 
@@ -149,6 +177,9 @@ class GLInterface {
 
         // Set the translation values
         void setTranslationValues(float transX, float tranxY, float transZ);
+
+        // Set the ilumination values
+        void setIluminationValues(float Ka, float Iar, float Iag, float Iab, float Kd, float Idr, float Idg, float Idb, float lightX, float lightY, float lightZ);
 
         // Initialize the window's view
         void initView (void);
